@@ -27,6 +27,8 @@ module.exports = {
       },
       masterUserID: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true,
         references: {
           model: "MasterUsers",
           key: "id"
