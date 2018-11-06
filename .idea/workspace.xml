@@ -2,26 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca8c3b82-b60f-4f76-9ac1-25a3b64e9fac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.sequelizerc.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/20181106071525-create-master-user.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/20181106071813-create-master-user-contact.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/20181106072023-create-master-user-personal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/20181106074533-create-student.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/20181106074723-create-teacher.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/masteruser.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/masterusercontact.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/masteruserpersonal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/student.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/teacher.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -43,7 +25,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gitignore" value="3" />
-          <entry key="js" value="41" />
+          <entry key="js" value="43" />
           <entry key="json" value="2" />
           <entry key="www" value="2" />
         </counts>
@@ -51,24 +33,24 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="2" />
-          <entry key="JavaScript" value="43" />
+          <entry key="JavaScript" value="45" />
           <entry key="PLAIN_TEXT" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gitignore" value="33" />
-          <entry key="js" value="987" />
+          <entry key="js" value="1017" />
           <entry key="json" value="35" />
-          <entry key="txt" value="29" />
+          <entry key="txt" value="66" />
           <entry key="www" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JSON" value="35" />
-          <entry key="JavaScript" value="989" />
-          <entry key="PLAIN_TEXT" value="62" />
+          <entry key="JavaScript" value="1019" />
+          <entry key="PLAIN_TEXT" value="99" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -84,10 +66,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/migrations/20181106071525-create-master-user.js">
+        <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+            <state relative-caret-position="272">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
             </state>
           </provider>
         </entry>
@@ -114,7 +96,6 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/config/config.json" />
         <option value="$PROJECT_DIR$/models/index.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/models/masterusercontact.js" />
         <option value="$PROJECT_DIR$/migrations/20181106071813-create-master-user-contact.js" />
         <option value="$PROJECT_DIR$/models/masteruserpersonal.js" />
@@ -125,6 +106,7 @@
         <option value="$PROJECT_DIR$/migrations/20181106074723-create-teacher.js" />
         <option value="$PROJECT_DIR$/migrations/20181106074533-create-student.js" />
         <option value="$PROJECT_DIR$/migrations/20181106071525-create-master-user.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -182,16 +164,6 @@
               <item name="Backend" type="b2602c69:ProjectViewProjectNode" />
               <item name="Backend" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Backend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Backend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -209,7 +181,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.NodeInterpreter" value="project" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\Rohan Dsouza\AppData\Roaming\npm\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.language" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -245,7 +217,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1541486725980</updated>
-      <workItem from="1541486743699" duration="5110000" />
+      <workItem from="1541486743699" duration="7414000" />
     </task>
     <task id="LOCAL-00001" summary="Dependencies added">
       <created>1541487904514</created>
@@ -254,11 +226,18 @@
       <option name="project" value="LOCAL" />
       <updated>1541487904514</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Created user models">
+      <created>1541491964821</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1541491964821</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5110000" />
+    <option name="totallyTimeSpent" value="7414000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -275,9 +254,9 @@
     <layout>
       <window_info id="Favorites" order="0" sideWeight="0.49682876" side_tool="true" weight="0.24983476" />
       <window_info id="npm" order="1" sideWeight="0.49682876" side_tool="true" weight="0.24983476" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.50317127" visible="true" weight="0.24983476" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.50317127" visible="true" weight="0.24983476" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="0" visible="true" weight="0.32907802" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="0" visible="true" weight="0.32907802" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="2" show_stripe_button="false" />
       <window_info anchor="bottom" id="Docker" order="3" show_stripe_button="false" />
@@ -301,7 +280,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Dependencies added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dependencies added" />
+    <MESSAGE value="Created user models" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created user models" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -343,13 +323,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="74" selection-start-line="12" selection-start-column="74" selection-end-line="12" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -419,7 +392,21 @@
     <entry file="file://$PROJECT_DIR$/migrations/20181106071525-create-master-user.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+          <caret line="19" column="25" lean-forward="true" selection-start-line="19" selection-start-column="25" selection-end-line="20" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
