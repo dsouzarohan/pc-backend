@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "MasterUser",
     {
       typeOfUser: {
-        typeOfUser: DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
       }
     },
