@@ -1,17 +1,18 @@
+const passwordUtility = require("../utilities/password");
+
 const db = require("../models");
 const {
   Sequelize,
   sequelize,
 
-  MasterUser
+  MasterUser,
+  MasterUserContact
 } = db;
 
 createUser = user => {
   let masterUser;
 
   let { type, personal, contact, credentials } = user;
-
-  console.log(user);
 
   return sequelize.transaction(transaction => {
     return MasterUser.create(
@@ -66,17 +67,34 @@ createUser = user => {
         );
       })
       .then(createdStudentOrTeacher => {
+        return passwordUtility.hashPassword(credentials.password);
+      })
+      .then(hashedPassword => {
         return masterUser.createUserCredential(
           {
             email: credentials.email,
-            password: credentials.password
+            password: hashedPassword
           },
           { transaction }
         );
+      })
+      .catch(error => {
+        console.log(error);
+        console.log("In transaction catch");
+        return Promise.reject(error);
       });
   });
 };
 
+userEmailExists = email => {
+  return MasterUserContact.findOne({
+    where: {
+      email
+    }
+  });
+};
+
 module.exports = {
-  createUser
+  createUser,
+  userEmailExists
 };

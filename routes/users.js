@@ -14,19 +14,41 @@ router.post("/signup", (req, res, next) => {
     .then(result => {
       // console.log(result);
       res.json({
-        message: "Got ya fuckin data biatch"
+        message: "Record has been added successfully"
       });
     })
     .catch(error => {
       // console.log(error);
 
       res.json({
-        message: "Scene hogaya bro",
+        message:
+          "Record could not be added. Check out the error property for more.",
         error
       });
     });
 
   //todo: perform backend validation here and with every form
+});
+
+router.get("/email/:email", (req, res, next) => {
+  const email = req.params["email"];
+
+  UserController.userEmailExists(email)
+    .then(credential => {
+      if (credential) {
+        return res.json({
+          emailExists: true
+        });
+      }
+      res.json({
+        emailExists: false
+      });
+    })
+    .catch(error => {
+      res.json({
+        error
+      });
+    });
 });
 
 module.exports = router;
