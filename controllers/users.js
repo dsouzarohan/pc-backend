@@ -14,7 +14,6 @@ createUser = user => {
   console.log(user);
 
   return sequelize.transaction(transaction => {
-
     return MasterUser.create(
       {
         typeOfUser: type.type
@@ -36,31 +35,44 @@ createUser = user => {
         );
       })
       .then(createdMasterUserPersonal => {
-        return masterUser.createMasterUserContact({
-          phoneNumber: contact.mobileNumber,
-          alternateNumber: contact.alternateNumber,
-          email: contact.email,
-          address: contact.address
-
-        });
+        return masterUser.createMasterUserContact(
+          {
+            phoneNumber: contact.mobileNumber,
+            alternateNumber: contact.alternateNumber,
+            email: contact.email,
+            address: contact.address
+          },
+          { transaction }
+        );
       })
       .then(createdMasterUserContact => {
         if (type.type === "Student") {
-          return masterUser.createStudent({
-            stream: "",
-            uid: 123456
-          });
+          console.log("Creating");
+
+          return masterUser.createStudent(
+            {
+              stream: "",
+              uid: 123456
+            },
+            { transaction }
+          );
         }
 
-        return masterUser.createTeacher({
-          uid: 123456
-        });
+        return masterUser.createTeacher(
+          {
+            uid: 123456
+          },
+          { transaction }
+        );
       })
       .then(createdStudentOrTeacher => {
-        return masterUser.createUserCredential({
-          email: credentials.email,
-          password: credentials.password
-        });
+        return masterUser.createUserCredential(
+          {
+            email: credentials.email,
+            password: credentials.password
+          },
+          { transaction }
+        );
       });
   });
 };
