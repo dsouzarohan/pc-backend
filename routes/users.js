@@ -11,14 +11,15 @@ router.post("/signup", (req, res, next) => {
   const user = req.body;
 
   UserController.createUser(user)
-    .then(user => {
-      console.log(user);
+    .then(result => {
+      // console.log(result);
       res.json({
         message: "Got ya fuckin data biatch"
       });
     })
     .catch(error => {
-      console.log("LLG");
+      // console.log(error);
+
       res.json({
         message: "Scene hogaya bro",
         error

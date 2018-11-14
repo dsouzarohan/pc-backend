@@ -4,12 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     "MasterUserContact",
     {
       phoneNumber: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
           unique: true
       },
       alternateNumber: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           unique: true
       },
       email: {

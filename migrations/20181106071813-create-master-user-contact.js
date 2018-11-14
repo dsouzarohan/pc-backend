@@ -9,12 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       phoneNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
       alternateNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         unique: true
       },
       email: {
