@@ -29,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
 
     //master associations
     MasterUserContact.belongsTo(models.MasterUser);
+
+    //Email association
+    MasterUserContact.hasOne(models.UserCredential, {
+      sourceKey: 'email',
+      foreignKey: 'email'
+    });
   };
   return MasterUserContact;
 };

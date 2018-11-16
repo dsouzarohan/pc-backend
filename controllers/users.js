@@ -7,7 +7,7 @@ const {
 
   MasterUser,
   MasterUserContact,
-  MasterUserCredential
+  UserCredential
 } = db;
 
 createUser = user => {
@@ -88,7 +88,7 @@ createUser = user => {
 };
 
 getCredential = email => {
-  return MasterUserCredential.findOne({
+  return UserCredential.findOne({
     where: {
       email
     }
@@ -103,7 +103,7 @@ userEmailExists = email => {
   });
 };
 
-// todo: add GET routes for all async validators
+// TODO: add GET routes for all async validators
 
 module.exports = {
   createUser,

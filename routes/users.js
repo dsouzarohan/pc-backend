@@ -1,9 +1,11 @@
 var express = require("express");
+var jwt = require("jsonwebtoken");
+
 var router = express.Router();
 
 var UserController = require("../controllers/users");
 
-var passwordUtility = require('../utilities/password');
+var passwordUtility = require("../utilities/password");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
@@ -54,32 +56,56 @@ router.get("/email/:email", (req, res, next) => {
     });
 });
 
-router.post("login", (req, res, next) => {
+router.post("/login", (req, res, next) => {
+  console.log(req.body);
+
   const { credentials } = req.body;
 
+  console.log(credentials);
+
+  let fetchedUserCredentials;
+
   UserController.getCredential(credentials.email)
-      .then(userCredentials => {
-          if(!userCredentials){
-              return res
-                  .status(401)
-                  .json({
-                      error: "Email address does not exist"
-                  });
-          }
+    .then(userCredentials => {
+      console.log(userCredentials);
 
-          return passwordUtility.comparePasswords(credentials.password, userCredentials.password);
-      })
-      .then( result => {
-          if(!result){
-              return res.json({
-                  error: "Incorrect password"
-              });
+      if (!userCredentials)
+        return res.status(401).json({ error: "Email address does not exist" });
 
-          }
+      fetchedUserCredentials = userCredentials;
 
+      return passwordUtility.comparePasswords(
+        credentials.password,
+        fetchedUserCredentials.password
+      );
+    })
+    .then(result => {
+      if (!result) return res.json({ error: "Incorrect password" });
 
+      const token = jwt.sign(
+        {
+          email: fetchedUserCredentials.email,
+          userID: fetchedUserCredentials.id
+        },
+        "MYSECRETTHATWILLBECHANGEDSOON",
+        {
+          expiresIn: "1hr"
+        }
+      );
 
-      })
+      console.log(token);
+
+      res.json({
+        token
+      });
+    })
+    .catch(error => {
+      console.log(error);
+
+      return res.json({
+        error
+      });
+    });
 });
 
 module.exports = router;

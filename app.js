@@ -11,6 +11,11 @@ var usersRouter = require("./routes/users");
 //express app
 var app = express();
 
+var { Sequelize, sequelize } = require("./models");
+
+// TO BE RUN ONLY TO SYNC TABLES
+// sequelize.sync({force:true});
+
 //middleware
 app.use(allowCORS);
 app.use(logger("dev"));
