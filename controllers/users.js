@@ -6,7 +6,8 @@ const {
   sequelize,
 
   MasterUser,
-  MasterUserContact
+  MasterUserContact,
+  MasterUserCredential
 } = db;
 
 createUser = user => {
@@ -86,6 +87,14 @@ createUser = user => {
   });
 };
 
+getCredential = email => {
+  return MasterUserCredential.findOne({
+    where: {
+      email
+    }
+  });
+};
+
 userEmailExists = email => {
   return MasterUserContact.findOne({
     where: {
@@ -94,7 +103,10 @@ userEmailExists = email => {
   });
 };
 
+// todo: add GET routes for all async validators
+
 module.exports = {
   createUser,
-  userEmailExists
+  userEmailExists,
+  getCredential
 };

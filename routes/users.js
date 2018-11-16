@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router();
+
 var UserController = require("../controllers/users");
+
+var passwordUtility = require('../utilities/password');
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
@@ -49,6 +52,34 @@ router.get("/email/:email", (req, res, next) => {
         error
       });
     });
+});
+
+router.post("login", (req, res, next) => {
+  const { credentials } = req.body;
+
+  UserController.getCredential(credentials.email)
+      .then(userCredentials => {
+          if(!userCredentials){
+              return res
+                  .status(401)
+                  .json({
+                      error: "Email address does not exist"
+                  });
+          }
+
+          return passwordUtility.comparePasswords(credentials.password, userCredentials.password);
+      })
+      .then( result => {
+          if(!result){
+              return res.json({
+                  error: "Incorrect password"
+              });
+
+          }
+
+
+
+      })
 });
 
 module.exports = router;

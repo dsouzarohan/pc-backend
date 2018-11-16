@@ -22,8 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     MasterUser.hasOne(models.Teacher);
 
     //credential association
-      MasterUser.hasOne(models.UserCredential);
+    MasterUser.hasOne(models.UserCredential);
 
   };
+
   return MasterUser;
 };
