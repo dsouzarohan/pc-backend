@@ -6,6 +6,7 @@ var router = express.Router();
 var UserController = require("../controllers/users");
 
 var passwordUtility = require("../utilities/password");
+var tokenUtility = require("../utilities/token");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
@@ -17,13 +18,11 @@ router.post("/signup", (req, res, next) => {
 
   UserController.createUser(user)
     .then(result => {
-      // console.log(result);
       res.json({
         message: "Record has been added successfully"
       });
     })
     .catch(error => {
-      // console.log(error);
 
       res.json({
         message:
@@ -57,20 +56,17 @@ router.get("/email/:email", (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
-  console.log(req.body);
 
   const { credentials } = req.body;
 
-  console.log(credentials);
 
   let fetchedUserCredentials;
 
   UserController.getCredential(credentials.email)
     .then(userCredentials => {
-      console.log(userCredentials);
 
-      if (!userCredentials)
-        return res.status(401).json({ error: "Email address does not exist" });
+
+      if (!userCredentials) throw new Error('Email address does not exist');
 
       fetchedUserCredentials = userCredentials;
 
@@ -80,30 +76,20 @@ router.post("/login", (req, res, next) => {
       );
     })
     .then(result => {
-      if (!result) return res.json({ error: "Incorrect password" });
 
-      const token = jwt.sign(
-        {
-          email: fetchedUserCredentials.email,
-          userID: fetchedUserCredentials.id
-        },
-        "MYSECRETTHATWILLBECHANGEDSOON",
-        {
-          expiresIn: "1hr"
-        }
-      );
+      if (!result) throw new Error('Incorrect password');
 
-      console.log(token);
+      const token = tokenUtility.createToken(fetchedUserCredentials.email, fetchedUserCredentials.id);
 
       res.json({
-        token
+        token,
+        expiresIn: 3600
       });
     })
     .catch(error => {
-      console.log(error);
 
-      return res.json({
-        error
+      return res.status(401).json({
+        message: error.message
       });
     });
 });
