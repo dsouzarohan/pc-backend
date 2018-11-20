@@ -1,5 +1,4 @@
 var express = require("express");
-var jwt = require("jsonwebtoken");
 
 var router = express.Router();
 
@@ -18,8 +17,11 @@ router.post("/signup", (req, res, next) => {
 
   UserController.createUser(user)
     .then(result => {
-      res.json({
-        message: "Record has been added successfully"
+
+      console.log(result);
+
+      return res.status(200).json({
+        message: "Record added successfully"
       });
     })
     .catch(error => {

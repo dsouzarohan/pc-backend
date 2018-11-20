@@ -40,7 +40,7 @@ createUser = user => {
         return masterUser.createMasterUserContact(
           {
             phoneNumber: contact.mobileNumber,
-            alternateNumber: contact.alternateNumber,
+            alternateNumber: contact.alternateNumber === '' ? null : contact.alternateNumber,
             email: contact.email,
             address: contact.address
           },
@@ -49,12 +49,11 @@ createUser = user => {
       })
       .then(createdMasterUserContact => {
         if (type.type === "Student") {
-          console.log("Creating");
 
           return masterUser.createStudent(
             {
-              stream: "",
-              uid: 123456
+              stream: type.stream,
+              uid: type.uid
             },
             { transaction }
           );
@@ -62,7 +61,7 @@ createUser = user => {
 
         return masterUser.createTeacher(
           {
-            uid: 123456
+            uid: type.uid
           },
           { transaction }
         );
@@ -80,8 +79,8 @@ createUser = user => {
         );
       })
       .catch(error => {
-        console.log(error);
-        console.log("In transaction catch");
+        (error);
+        ("In transaction catch");
         return Promise.reject(error);
       });
   });
