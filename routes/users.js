@@ -17,7 +17,6 @@ router.post("/signup", (req, res, next) => {
 
   UserController.createUser(user)
     .then(result => {
-
       console.log(result);
 
       return res.status(200).json({
@@ -25,7 +24,6 @@ router.post("/signup", (req, res, next) => {
       });
     })
     .catch(error => {
-
       res.json({
         message:
           "Record could not be added. Check out the error property for more.",
@@ -57,18 +55,59 @@ router.get("/email/:email", (req, res, next) => {
     });
 });
 
+router.get("/number/:number", (req, res, next) => {
+  const number = req.params["number"];
+
+  UserController.phoneNumberExists(number)
+    .then(fetchedNumber => {
+      if (fetchedNumber) {
+        res.json({
+          numberExists: true
+        });
+      } else {
+        res.json({
+          numberExists: false
+        });
+      }
+    })
+    .catch(error => {
+      res.json({
+        error
+      });
+    });
+});
+
+router.get("/uid/:uid/type/:type", (req, res, next) => {
+  const uid = req.params["uid"];
+  const typeOfUser = req.params["type"];
+
+  UserController.uidExists(uid, typeOfUser)
+    .then(fetchedUid => {
+      if (fetchedUid) {
+        res.json({
+          uidExists: true
+        });
+      } else {
+        res.json({
+          uidExists: false
+        });
+      }
+    })
+    .catch(error => {
+      res.json({
+        error
+      });
+  });
+});
+
 router.post("/login", (req, res, next) => {
-
   const { credentials } = req.body;
-
 
   let fetchedUserCredentials;
 
   UserController.getCredential(credentials.email)
     .then(userCredentials => {
-
-
-      if (!userCredentials) throw new Error('Email address does not exist');
+      if (!userCredentials) throw new Error("Email address does not exist");
 
       fetchedUserCredentials = userCredentials;
 
@@ -78,10 +117,12 @@ router.post("/login", (req, res, next) => {
       );
     })
     .then(result => {
+      if (!result) throw new Error("Incorrect password");
 
-      if (!result) throw new Error('Incorrect password');
-
-      const token = tokenUtility.createToken(fetchedUserCredentials.email, fetchedUserCredentials.id);
+      const token = tokenUtility.createToken(
+        fetchedUserCredentials.email,
+        fetchedUserCredentials.id
+      );
 
       res.json({
         token,
@@ -89,7 +130,6 @@ router.post("/login", (req, res, next) => {
       });
     })
     .catch(error => {
-
       return res.status(401).json({
         message: error.message
       });
