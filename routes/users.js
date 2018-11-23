@@ -6,12 +6,17 @@ var UserController = require("../controllers/users");
 
 var passwordUtility = require("../utilities/password");
 var tokenUtility = require("../utilities/token");
+var randomer = require("../utilities/random");
 
-var userIDAuth = require('../middleware/userIDAuth');
+var userIDAuth = require("../middleware/userIDAuth");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
-  res.send("respond with a resource");
+
+  res.json({
+    randomString: randomer.randomString()
+  });
+
 });
 
 //user signin or signup
@@ -21,7 +26,6 @@ router.post("/signup", (req, res, next) => {
 
   UserController.createUser(user)
     .then(result => {
-
       return res.status(200).json({
         message: "Record added successfully"
       });
@@ -63,7 +67,8 @@ router.post("/signin", (req, res, next) => {
 
       res.json({
         token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userID: fetchedUserCredentials.id
       });
     })
     .catch(error => {
@@ -143,37 +148,30 @@ router.get("/uid/:uid/type/:type", (req, res, next) => {
 
 //User data routes
 
-router.get(
-    "/profile/:id",
-    userIDAuth,
-    (req, res) => {
+router.get("/profile/:id", userIDAuth, (req, res) => {
   const id = req.params["id"];
   const jwtID = req.userData.userID;
 
-  
-  
+  console.log("Route called", id, jwtID);
 
   // todo: convert both to numbers and compare
 
-  if(id != jwtID) {
+  if (id != jwtID) {
     return res.status(401).json({
       message: "Unauthorized access"
     });
   } else {
     UserController.getProfile(id)
-    .then(profile => {
-      res.json({
-        profile
+      .then(profile => {
+        res.json({
+          profile
+        });
+      })
+      .catch(error => {
+        res.status(401).json({
+          error
+        });
       });
-
-      
-
-    })
-    .catch(error => {
-      res.status(401).json({
-        error
-      });
-    });
   }
 });
 

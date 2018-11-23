@@ -2,9 +2,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
 
-  
 
-  const tokenHeader = req.get('X-Authorization')
+  const tokenHeader = req.get('X-Authorization');
   
 
  try{
@@ -12,8 +11,6 @@ module.exports = (req, res, next) => {
    const token = tokenHeader.split(' ')[1];
    const decodedToken = jwt.verify(token, "MYSECRETTHATWILLBECHANGEDSOON");
 
-   
-   
 
    if(!decodedToken){
      res.status(401).json({
@@ -27,6 +24,6 @@ module.exports = (req, res, next) => {
  } catch(error){
    res.json({
      error
-   })
+   });
  }
 };

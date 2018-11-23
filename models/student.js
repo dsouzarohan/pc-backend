@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 
       //master association
       Student.belongsTo(models.MasterUser);
+
   };
   return Student;
 };

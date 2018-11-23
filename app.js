@@ -19,8 +19,8 @@ var { Sequelize, sequelize } = require("./models");
 // sequelize.sync({force:true});
 
 //custom middleware
-app.use(allowCORS);
 
+app.use(allowCORS);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
