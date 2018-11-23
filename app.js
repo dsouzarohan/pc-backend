@@ -1,8 +1,10 @@
 var express = require("express");
 var path = require("path");
+
+var allowCORS = require("./middleware/allowCORS");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var allowCORS = require("./middleware/allowCORS");
+var userIDAuth = require("./middleware/userIDAuth");
 
 // routes
 var indexRouter = require("./routes/index");
@@ -16,13 +18,16 @@ var { Sequelize, sequelize } = require("./models");
 // TO BE RUN ONLY TO SYNC TABLES
 // sequelize.sync({force:true});
 
-//middleware
+//custom middleware
 app.use(allowCORS);
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// :id(\d+)
 
 //REST API routes
 app.use("/api/", indexRouter);

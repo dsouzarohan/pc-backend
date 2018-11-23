@@ -7,6 +7,7 @@ const {
 
   MasterUser,
   MasterUserContact,
+  MasterUserPersonal,
   UserCredential,
   Student,
   Teacher
@@ -139,6 +140,21 @@ uidExists = (uid, typeOfUser) => {
   }
 };
 
+//component data controllers
+
+getProfile = userID => {
+
+  return MasterUser.findOne({
+    where: {
+      id: userID
+    },
+    include: [
+        MasterUserPersonal,
+        MasterUserContact
+    ]
+  })
+
+};
 
 // TODO: add GET routes for all async validators
 
@@ -147,5 +163,6 @@ module.exports = {
   userEmailExists,
   phoneNumberExists,
   uidExists,
-  getCredential
+  getCredential,
+  getProfile
 };

@@ -7,17 +7,20 @@ var UserController = require("../controllers/users");
 var passwordUtility = require("../utilities/password");
 var tokenUtility = require("../utilities/token");
 
+var userIDAuth = require('../middleware/userIDAuth');
+
 /* GET users listing. */
 router.get("/", function(req, res, next) {
   res.send("respond with a resource");
 });
+
+//user signin or signup
 
 router.post("/signup", (req, res, next) => {
   const user = req.body;
 
   UserController.createUser(user)
     .then(result => {
-      console.log(result);
 
       return res.status(200).json({
         message: "Record added successfully"
@@ -33,6 +36,44 @@ router.post("/signup", (req, res, next) => {
 
   //todo: perform backend validation here and with every form
 });
+
+router.post("/signin", (req, res, next) => {
+  const { credentials } = req.body;
+
+  let fetchedUserCredentials;
+
+  UserController.getCredential(credentials.email)
+    .then(userCredentials => {
+      if (!userCredentials) throw new Error("Email address does not exist");
+
+      fetchedUserCredentials = userCredentials;
+
+      return passwordUtility.comparePasswords(
+        credentials.password,
+        fetchedUserCredentials.password
+      );
+    })
+    .then(result => {
+      if (!result) throw new Error("Incorrect password");
+
+      const token = tokenUtility.createToken(
+        fetchedUserCredentials.email,
+        fetchedUserCredentials.id
+      );
+
+      res.json({
+        token,
+        expiresIn: 3600
+      });
+    })
+    .catch(error => {
+      return res.status(401).json({
+        message: error.message
+      });
+    });
+});
+
+//Async validation routes
 
 router.get("/email/:email", (req, res, next) => {
   const email = req.params["email"];
@@ -97,43 +138,43 @@ router.get("/uid/:uid/type/:type", (req, res, next) => {
       res.json({
         error
       });
-  });
+    });
 });
 
-router.post("/login", (req, res, next) => {
-  const { credentials } = req.body;
+//User data routes
 
-  let fetchedUserCredentials;
+router.get(
+    "/profile/:id",
+    userIDAuth,
+    (req, res) => {
+  const id = req.params["id"];
+  const jwtID = req.userData.userID;
 
-  UserController.getCredential(credentials.email)
-    .then(userCredentials => {
-      if (!userCredentials) throw new Error("Email address does not exist");
+  
+  
 
-      fetchedUserCredentials = userCredentials;
+  // todo: convert both to numbers and compare
 
-      return passwordUtility.comparePasswords(
-        credentials.password,
-        fetchedUserCredentials.password
-      );
-    })
-    .then(result => {
-      if (!result) throw new Error("Incorrect password");
-
-      const token = tokenUtility.createToken(
-        fetchedUserCredentials.email,
-        fetchedUserCredentials.id
-      );
-
+  if(id != jwtID) {
+    return res.status(401).json({
+      message: "Unauthorized access"
+    });
+  } else {
+    UserController.getProfile(id)
+    .then(profile => {
       res.json({
-        token,
-        expiresIn: 3600
+        profile
       });
+
+      
+
     })
     .catch(error => {
-      return res.status(401).json({
-        message: error.message
+      res.status(401).json({
+        error
       });
     });
+  }
 });
 
 module.exports = router;
