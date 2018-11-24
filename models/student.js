@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       //master association
       Student.belongsTo(models.MasterUser);
 
+    //student classroom n:m association
+    Student.belongsToMany(models.Classroom, {
+      through: "StudentClassrooms"
+    });
+
   };
   return Student;
 };

@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
 
     //master association
     Teacher.belongsTo(models.MasterUser);
+
+    //classroom association
+    Teacher.hasMany(models.Classroom, {
+      foreignKey: "createdBy"
+    })
   };
   return Teacher;
 };

@@ -1,0 +1,34 @@
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Classroom = sequelize.define('Classroom', {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    subject: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    classcode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    }
+  }, {});
+  Classroom.associate = function(models) {
+    // associations can be defined here
+
+    Classroom.belongsTo(models.Teacher, {
+      foreignKey: "createdBy"
+    });
+
+
+    //student classroom n:m association
+    Classroom.belongsToMany(models.Student, {
+      through: 'StudentClassrooms'
+    });
+
+  };
+  return Classroom;
+};
