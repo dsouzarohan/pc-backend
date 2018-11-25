@@ -3,13 +3,12 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('StudentClassrooms', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.UUID,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        defaultValue: Sequelize.UUIDV4
       },
       studentId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'Students',
@@ -17,7 +16,7 @@ module.exports = {
         }
       },
       classroomId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'Classrooms',

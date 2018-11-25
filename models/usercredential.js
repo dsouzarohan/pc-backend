@@ -3,11 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const UserCredential = sequelize.define(
     "UserCredential",
     {
-      // email: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      //   unique: true
-      // },
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false
@@ -19,7 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
 
       //master associations
-      UserCredential.belongsTo(models.MasterUser);
+      UserCredential.belongsTo(models.MasterUser, {
+        foreignKey: "masterUserId"
+      });
       UserCredential.belongsTo(models.MasterUserContact, {foreignKey: 'email', targetKey: 'email'});
 
   };

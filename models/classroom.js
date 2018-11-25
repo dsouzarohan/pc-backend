@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Classroom = sequelize.define('Classroom', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
     //student classroom n:m association
     Classroom.belongsToMany(models.Student, {
       through: 'StudentClassrooms'
+    });
+
+    //discussion associations
+    Classroom.hasMany(models.Discussion, {
+      foreignKey: "discussionId"
     });
 
   };

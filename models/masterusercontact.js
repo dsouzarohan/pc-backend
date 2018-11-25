@@ -3,6 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const MasterUserContact = sequelize.define(
     "MasterUserContact",
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
+      },
       phoneNumber: {
           type: DataTypes.STRING,
           allowNull: false,
@@ -28,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
 
     //master associations
-    MasterUserContact.belongsTo(models.MasterUser);
+    MasterUserContact.belongsTo(models.MasterUser, {
+      foreignKey: "masterUserId"
+    });
 
     //Email association
     MasterUserContact.hasOne(models.UserCredential, {

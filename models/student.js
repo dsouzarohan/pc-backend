@@ -3,6 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define(
     "Student",
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
+      },
       stream: {
         type: DataTypes.STRING,
         allowNull: false
@@ -19,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
 
       //master association
-      Student.belongsTo(models.MasterUser);
+      Student.belongsTo(models.MasterUser, {
+        foreignKey: "masterUserId"
+      });
 
     //student classroom n:m association
     Student.belongsToMany(models.Classroom, {

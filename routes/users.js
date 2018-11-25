@@ -62,13 +62,13 @@ router.post("/signin", (req, res, next) => {
 
       const token = tokenUtility.createToken(
         fetchedUserCredentials.email,
-        fetchedUserCredentials.id
+        fetchedUserCredentials.masterUserId
       );
 
       res.json({
         token,
         expiresIn: 3600,
-        userID: fetchedUserCredentials.id
+        userID: fetchedUserCredentials.masterUserId
       });
     })
     .catch(error => {
