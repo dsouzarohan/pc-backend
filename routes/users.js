@@ -45,12 +45,14 @@ router.post("/signin", (req, res, next) => {
   const { credentials } = req.body;
 
   let fetchedUserCredentials;
+  let fetchedMasterUser;
 
   UserController.getCredential(credentials.email)
     .then(userCredentials => {
       if (!userCredentials) throw new Error("Email address does not exist");
 
       fetchedUserCredentials = userCredentials;
+      fetchedMasterUser = userCredentials.MasterUser;
 
       return passwordUtility.comparePasswords(
         credentials.password,
@@ -68,7 +70,8 @@ router.post("/signin", (req, res, next) => {
       res.json({
         token,
         expiresIn: 3600,
-        userID: fetchedUserCredentials.masterUserId
+        userID: fetchedUserCredentials.masterUserId,
+        type: fetchedMasterUser.typeOfUser
       });
     })
     .catch(error => {

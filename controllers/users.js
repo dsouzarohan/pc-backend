@@ -95,7 +95,10 @@ getCredential = email => {
   return UserCredential.findOne({
     where: {
       email
-    }
+    },
+    include: [
+        MasterUser
+    ]
   });
 };
 
