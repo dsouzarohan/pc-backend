@@ -49,7 +49,7 @@ router.post("/signin", (req, res, next) => {
 
   UserController.getCredential(credentials.email)
     .then(userCredentials => {
-      if (!userCredentials) throw new Error("Email address does not exist");
+      if (!userCredentials) throw new Error("Woops! This email address does not exist");
 
       fetchedUserCredentials = userCredentials;
       fetchedMasterUser = userCredentials.MasterUser;
@@ -57,10 +57,11 @@ router.post("/signin", (req, res, next) => {
       return passwordUtility.comparePasswords(
         credentials.password,
         fetchedUserCredentials.password
+
       );
     })
     .then(result => {
-      if (!result) throw new Error("Incorrect password");
+      if (!result) throw new Error("Password entered is incorrect");
 
       const token = tokenUtility.createToken(
         fetchedUserCredentials.email,
