@@ -9,6 +9,7 @@ var userIDAuth = require("./middleware/userIDAuth");
 // routes
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var classroomsRouter = require("./routes/classrooms");
 
 //express app
 var app = express();
@@ -32,5 +33,6 @@ app.use(express.static(path.join(__dirname, "public")));
 //REST API routes
 app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/classrooms", classroomsRouter);
 
 module.exports = app;

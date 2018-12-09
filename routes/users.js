@@ -12,11 +12,9 @@ var userIDAuth = require("../middleware/userIDAuth");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
-
   res.json({
     randomString: randomer.randomString()
   });
-
 });
 
 //user signin or signup
@@ -49,7 +47,8 @@ router.post("/signin", (req, res, next) => {
 
   UserController.getCredential(credentials.email)
     .then(userCredentials => {
-      if (!userCredentials) throw new Error("Woops! This email address does not exist");
+      if (!userCredentials)
+        throw new Error("Woops! This email address does not exist");
 
       fetchedUserCredentials = userCredentials;
       fetchedMasterUser = userCredentials.MasterUser;
@@ -57,7 +56,6 @@ router.post("/signin", (req, res, next) => {
       return passwordUtility.comparePasswords(
         credentials.password,
         fetchedUserCredentials.password
-
       );
     })
     .then(result => {
@@ -65,7 +63,8 @@ router.post("/signin", (req, res, next) => {
 
       const token = tokenUtility.createToken(
         fetchedUserCredentials.email,
-        fetchedUserCredentials.masterUserId
+        fetchedUserCredentials.masterUserId,
+        fetchedMasterUser.typeOfUser
       );
 
       res.json({
@@ -157,8 +156,6 @@ router.get("/profile/:id", userIDAuth, (req, res) => {
   const jwtID = req.userData.userID;
 
   console.log("Route called", id, jwtID);
-
-  // todo: convert both to numbers and compare
 
   if (id != jwtID) {
     return res.status(401).json({

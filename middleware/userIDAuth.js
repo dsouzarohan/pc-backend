@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
        message: "You are unauthorized to access this resource"
      });
    } else {
-     req.userData = { email: decodedToken.email, userID: decodedToken.userID };
+     req.userData = { email: decodedToken.email, userID: decodedToken.userID, userType: decodedToken.type };
      next();
    }
 
