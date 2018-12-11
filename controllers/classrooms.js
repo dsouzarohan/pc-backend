@@ -15,8 +15,6 @@ const randomUtility = require("../utilities/random");
 const createNewClassroom = classroomDetails => {
   let { name, subject, teacherId } = classroomDetails;
 
-  
-
   return new Promise((resolve, reject) => {
     MasterUser.findOne({
       where: {
@@ -33,8 +31,6 @@ const createNewClassroom = classroomDetails => {
         return masterUser.getTeacher();
       })
       .then(teacher => {
-        
-
         if (!teacher) {
           reject({
             message: "Teacher does not exist"
@@ -42,7 +38,6 @@ const createNewClassroom = classroomDetails => {
         }
 
         let classcode = randomUtility.randomString();
-        
 
         return teacher.createClassroom({
           name: name,
@@ -51,8 +46,6 @@ const createNewClassroom = classroomDetails => {
         });
       })
       .then(classroom => {
-        
-
         resolve({
           message: "Classroom created successfully",
           classcode: classroom.get("classcode")
@@ -66,8 +59,10 @@ const createNewClassroom = classroomDetails => {
   });
 };
 
-const joinClassroom = (classcode, studentId) => {
+const joinClassroom = (classcode, masterId) => {
+
   let fetchedClassroom;
+  let fetchedStudent;
 
   return new Promise((resolve, reject) => {
     Classroom.findOne({
@@ -86,17 +81,22 @@ const joinClassroom = (classcode, studentId) => {
 
         return Student.findOne({
           where: {
-            id: studentId
+            masterUserID: masterId
           }
         });
       })
       .then(student => {
-        if (student) {
+
+        fetchedStudent = student;
+        return fetchedClassroom.hasStudent(student);
+      })
+      .then(classroomHasStudent => {
+        if (classroomHasStudent) {
           reject({
             message: "Student already part of classroom"
           });
         } else {
-          return fetchedClassroom.addStudent(student);
+          return fetchedClassroom.addStudent(fetchedStudent);
         }
       })
       .then(result => {
@@ -105,6 +105,9 @@ const joinClassroom = (classcode, studentId) => {
         });
       })
       .catch(error => {
+
+        console.log(error);
+
         reject({
           message: "Something went wrong"
         });

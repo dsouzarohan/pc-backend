@@ -11,7 +11,7 @@ const classroomController = require("../controllers/classrooms");
 router.post('/join', userAuth, (req, res) => {
 
   let classcode = req.body.classcode;
-  let studentId = req.userData.userID;
+  let masterId = req.userData.userID;
 
   let type = req.userData.userType;
 
@@ -19,10 +19,10 @@ router.post('/join', userAuth, (req, res) => {
     return res.status(401).json({
       message: "Unauthorized",
       details: "Only students can join classrooms"
-    })
+    });
   }
 
-  classroomController.joinClassroom(classcode, studentId)
+  classroomController.joinClassroom(classcode, masterId)
   .then( result => {
     console.log(result);
     res.json({
