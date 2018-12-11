@@ -15,6 +15,8 @@ const {
 
 const { Op } = Sequelize;
 
+//todo: change all return values of controllers to custom promises
+
 createUser = user => {
   let masterUser;
 

@@ -60,7 +60,6 @@ const createNewClassroom = classroomDetails => {
 };
 
 const joinClassroom = (classcode, masterId) => {
-
   let fetchedClassroom;
   let fetchedStudent;
 
@@ -86,7 +85,6 @@ const joinClassroom = (classcode, masterId) => {
         });
       })
       .then(student => {
-
         fetchedStudent = student;
         return fetchedClassroom.hasStudent(student);
       })
@@ -105,7 +103,6 @@ const joinClassroom = (classcode, masterId) => {
         });
       })
       .catch(error => {
-
         console.log(error);
 
         reject({
@@ -115,7 +112,47 @@ const joinClassroom = (classcode, masterId) => {
   });
 };
 
+const getClassrooms = (masterId, typeOfUser) => {
+  return new Promise((resolve, reject) => {
+    if (typeOfUser === "Student") {
+      Student.findOne({
+        where: {
+          masterUserID: masterId
+        }
+      })
+        .then(student => {
+          return student.getClassrooms();
+        })
+        .then(classrooms => {
+          resolve(classrooms);
+        })
+        .catch(error => {
+          reject({
+            error: error,
+            message: "Something went wrong"
+          });
+        });
+    } else {
+      Teacher.findOne({
+        where: {
+          masterUserID: masterId
+        }
+      }).then( teacher => {
+        return teacher.getClassrooms();
+      }).then( classrooms => {
+        resolve(classrooms);
+      }).catch(error => {
+        reject({
+          error,
+          message: "Something went wrong"
+        })
+      });
+    }
+  });
+};
+
 module.exports = {
   joinClassroom,
-  createNewClassroom
+  createNewClassroom,
+  getClassrooms
 };
