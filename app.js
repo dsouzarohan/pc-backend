@@ -1,23 +1,21 @@
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
 
-var allowCORS = require("./middleware/allowCORS");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var userIDAuth = require("./middleware/userIDAuth");
+const allowCORS = require("./middleware/allowCORS");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const userIDAuth = require("./middleware/userIDAuth");
 
-// routes
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var classroomsRouter = require("./routes/classrooms");
+// routers
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const classroomsRouter = require("./routes/classrooms");
+const discussionsRouter = require("./routes/discussions");
 
 //express app
-var app = express();
+const app = express();
 
-var { Sequelize, sequelize } = require("./models");
-
-// TO BE RUN ONLY TO SYNC TABLES
-// sequelize.sync({force:true});
+const { Sequelize, sequelize } = require("./models");
 
 //custom middleware
 
@@ -28,11 +26,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// :id(\d+)
-
 //REST API routes
 app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/classrooms", classroomsRouter);
+app.use("/api/discussions", discussionsRouter);
 
 module.exports = app;

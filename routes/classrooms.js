@@ -8,7 +8,7 @@ const classroomController = require("../controllers/classrooms");
 //all classroom related routes
 
 //join a classroom - for students
-router.post("/join", userAuth, (req, res) => {
+router.post("/join", userAuth({authorizationOnlyTo: "Student"}), (req, res) => {
   let classcode = req.body.classcode;
   let masterId = req.userData.userID;
 
@@ -37,7 +37,7 @@ router.post("/join", userAuth, (req, res) => {
 });
 
 //create a classroom - for teachers
-router.post("/create", userAuth, (req, res) => {
+router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) => {
   let teacherId = req.userData.userID;
   let type = req.userData.userType;
 
@@ -69,7 +69,7 @@ router.post("/create", userAuth, (req, res) => {
 });
 
 //get all classrooms - for students and teachers
-router.get("/fetch", userAuth, (req, res) => {
+router.get("/fetch", userAuth(), (req, res) => {
 
   let masterId = req.userData.userID;
   let typeOfUser = req.userData.userType;

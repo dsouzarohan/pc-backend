@@ -151,7 +151,7 @@ router.get("/uid/:uid/type/:type", (req, res, next) => {
 
 //User data routes
 
-router.get("/profile/:id", userIDAuth, (req, res) => {
+router.get("/profile/:id", userIDAuth(), (req, res) => {
   const id = req.params["id"];
   const jwtID = req.userData.userID;
 

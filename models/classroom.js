@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 
     //discussion associations
     Classroom.hasMany(models.Discussion, {
-      foreignKey: "discussionId"
+      foreignKey: "classroomId"
     });
 
   };
