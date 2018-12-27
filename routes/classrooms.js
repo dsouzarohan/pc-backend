@@ -69,7 +69,7 @@ router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) =>
 });
 
 //get all classrooms - for students and teachers
-router.get("/fetch", userAuth(), (req, res) => {
+router.get("", userAuth(), (req, res) => {
 
   let masterId = req.userData.userID;
   let typeOfUser = req.userData.userType;
@@ -80,7 +80,10 @@ router.get("/fetch", userAuth(), (req, res) => {
       res.json(result);
     })
     .catch(error => {
-      res.json(error);
+
+      console.log('Routes#Classroom#Catch', error);
+
+      res.status(400).send(error);
     });
 });
 

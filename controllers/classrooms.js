@@ -23,18 +23,14 @@ const createNewClassroom = classroomDetails => {
     })
       .then(masterUser => {
         if (!masterUser) {
-          reject({
-            message: "User does not exist"
-          });
+          reject({ message: "User does not exist" });
         }
 
         return masterUser.getTeacher();
       })
       .then(teacher => {
         if (!teacher) {
-          reject({
-            message: "Teacher does not exist"
-          });
+          reject({ message: "Teacher does not exist" });
         }
 
         let classcode = randomUtility.randomString();
@@ -48,13 +44,11 @@ const createNewClassroom = classroomDetails => {
       .then(classroom => {
         resolve({
           message: "Classroom created successfully",
-          classcode: classroom.get("classcode")
+          data: classroom.get("classcode")
         });
       })
       .catch(error => {
-        reject({
-          message: "Something went wrong"
-        });
+        reject({ message: "Something went wrong - " + error.toString() });
       });
   });
 };
@@ -73,9 +67,7 @@ const joinClassroom = (classcode, masterId) => {
         fetchedClassroom = classroom;
 
         if (!fetchedClassroom) {
-          reject({
-            message: "Classroom code is invalid"
-          });
+          reject({ message: "Classroom code is invalid" });
         }
 
         return Student.findOne({
@@ -90,9 +82,7 @@ const joinClassroom = (classcode, masterId) => {
       })
       .then(classroomHasStudent => {
         if (classroomHasStudent) {
-          reject({
-            message: "Student already part of classroom"
-          });
+          reject({ message: "Student already part of classroom" });
         } else {
           return fetchedClassroom.addStudent(fetchedStudent);
         }
@@ -104,10 +94,7 @@ const joinClassroom = (classcode, masterId) => {
       })
       .catch(error => {
         console.log(error);
-
-        reject({
-          message: "Something went wrong"
-        });
+        reject({ message: "Something went wrong - " + error.toString() });
       });
   });
 };
@@ -124,29 +111,34 @@ const getClassrooms = (masterId, typeOfUser) => {
           return student.getClassrooms();
         })
         .then(classrooms => {
-          resolve(classrooms);
+
+          resolve({
+            message: "Classrooms retrieved",
+            data: classrooms
+          });
         })
         .catch(error => {
-          reject({
-            error: error,
-            message: "Something went wrong"
-          });
+          console.log("Error", error);
+          reject({ message: "Something went wrong - " + error.toString() });
         });
     } else {
       Teacher.findOne({
         where: {
           masterUserID: masterId
         }
-      }).then( teacher => {
-        return teacher.getClassrooms();
-      }).then( classrooms => {
-        resolve(classrooms);
-      }).catch(error => {
-        reject({
-          error,
-          message: "Something went wrong"
+      })
+        .then(teacher => {
+          return teacher.getClassrooms();
         })
-      });
+        .then(classrooms => {
+          resolve({
+            message: "Classrooms retrieved",
+            data: classrooms
+          });
+        })
+        .catch(error => {
+          reject({ message: "Something went wrong - " + error.toString() });
+        });
     }
   });
 };

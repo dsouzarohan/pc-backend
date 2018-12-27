@@ -25,7 +25,6 @@ const createDiscussion = discussionDetails => {
       .then(classroom => {
         if (!classroom) {
           reject({
-            success: false,
             message:
               "Classroom in which discussion is to be created does not exist"
           });
@@ -40,20 +39,17 @@ const createDiscussion = discussionDetails => {
       .then(discussion => {
         if (discussion) {
           resolve({
-            success: true,
             message: "Discussion created"
           });
         } else {
           reject({
-            success: false,
             message: "Discussion not created"
           });
         }
       })
       .catch(error => {
         reject({
-          success: false,
-          message: error
+          message: "Something went wrong - " + error.toString()
         });
       });
   });
@@ -71,7 +67,6 @@ const createDiscussionPost = discussionPostDetails => {
       .then(discussion => {
         if (!discussion) {
           reject({
-            success: false,
             message: "Discussion on which post is to be created does not exist"
           });
         }
@@ -84,15 +79,13 @@ const createDiscussionPost = discussionPostDetails => {
       .then(discussionPost => {
         if (discussionPost) {
           resolve({
-            success: true,
             message: "Discussion post created"
           });
         }
       })
       .catch(error => {
         reject({
-          success: false,
-          error
+          message: "Something went wrong - " + error.toString()
         });
       });
   });
@@ -110,8 +103,7 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
       .then(discussionPost => {
         if (!discussionPost) {
           reject({
-            success: false,
-            error:
+            message:
               "Discussion post on which comment is to be created does not exist"
           });
         }
@@ -124,20 +116,17 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
       .then(discussionPostComment => {
         if (discussionPostComment) {
           resolve({
-            success: true,
             message: "Discussion Post Comment created"
           });
         } else {
           reject({
-            success: false,
-            error: "Comment could not be created"
+            message: "Comment could not be created"
           });
         }
       })
       .catch(error => {
         reject({
-          success: false,
-          error
+          message: "Something went wrong - " + error.toString()
         });
       });
   });
@@ -154,7 +143,6 @@ const getAllDiscussions = classroomId => {
     })
       .then(discussions => {
         resolve({
-          success: true,
           message: "Discussions retrieved",
           data: discussions
         });
@@ -163,8 +151,7 @@ const getAllDiscussions = classroomId => {
         console.log(error);
 
         reject({
-          success: false,
-          error
+          message: "Something went wrong - " + error.toString()
         });
       });
   });
@@ -189,15 +176,13 @@ const getDiscussion = discussionId => {
     })
       .then(discussion => {
         resolve({
-          success: true,
           message: "Discussion fetched",
           data: discussion
         });
       })
       .catch(error => {
         reject({
-          success: false,
-          error
+          message: "Something went wrong - " + error.toString()
         });
       });
   });

@@ -66,7 +66,7 @@ router.post("/discussionPost/discussionPostComment/create", userAuth(), (req, re
       res.json(result);
     })
     .catch(error => {
-      res.json(error);
+      res.status(400).send(error);
     });
 });
 
