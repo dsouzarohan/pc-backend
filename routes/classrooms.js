@@ -24,27 +24,21 @@ router.post("/join", userAuth({authorizationOnlyTo: "Student"}), (req, res) => {
   classroomController
     .joinClassroom(classcode, masterId)
     .then(result => {
-      console.log(result);
-      res.json({
-        success: result
-      });
+      res.json(result);
     })
     .catch(error => {
-      res.json({
-        failed: error.message
-      });
+      res.status(422).json(error);
     });
 });
 
 //create a classroom - for teachers
-router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) => {
+router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) =>  {
   let teacherId = req.userData.userID;
   let type = req.userData.userType;
 
   if (type !== "Teacher") {
     return res.status(401).json({
-      message: "Unauthorized",
-      details: "Only teachers can create classrooms"
+      message: "Only teachers can create classrooms"
     });
   }
 

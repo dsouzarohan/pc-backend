@@ -29,10 +29,9 @@ router.post("/signup", (req, res, next) => {
       });
     })
     .catch(error => {
-      res.json({
+      res.status(400).json({
         message:
-          "Record could not be added. Check out the error property for more.",
-        error
+          "Something went wrong - "+error.toString()
       });
     });
 
@@ -98,8 +97,8 @@ router.get("/email/:email", (req, res, next) => {
       });
     })
     .catch(error => {
-      res.json({
-        error
+      res.status(400).send({
+        message: "Something went wrong - "+error.toString()
       });
     });
 });
@@ -120,9 +119,9 @@ router.get("/number/:number", (req, res, next) => {
       }
     })
     .catch(error => {
-      res.json({
-        error
-      });
+    res.status(400).send({
+      message: "Something went wrong - "+error.toString()
+    });
     });
 });
 
@@ -143,9 +142,9 @@ router.get("/uid/:uid/type/:type", (req, res, next) => {
       }
     })
     .catch(error => {
-      res.json({
-        error
-      });
+    res.status(400).send({
+      message: "Something went wrong - "+error.toString()
+    });
     });
 });
 
@@ -165,6 +164,7 @@ router.get("/profile/:id", userIDAuth(), (req, res) => {
     UserController.getProfile(id)
       .then(profile => {
         res.json({
+          message: "Profile retrieved",
           profile
         });
       })

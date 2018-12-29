@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 
 const hashPassword = password => {
   return bcrypt
-    .genSalt(15)
+    .genSalt(6)
     .then(salt => {
       return bcrypt.hash(password, salt);
     })

@@ -67,6 +67,7 @@ const joinClassroom = (classcode, masterId) => {
         fetchedClassroom = classroom;
 
         if (!fetchedClassroom) {
+          console.log('No classrooms');
           reject({ message: "Classroom code is invalid" });
         }
 
@@ -89,11 +90,11 @@ const joinClassroom = (classcode, masterId) => {
       })
       .then(result => {
         resolve({
-          message: "Student added to classroom"
+          message: "Student added to classroom",
+          classroom: fetchedClassroom
         });
       })
       .catch(error => {
-        console.log(error);
         reject({ message: "Something went wrong - " + error.toString() });
       });
   });
