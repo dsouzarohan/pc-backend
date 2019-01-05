@@ -52,13 +52,10 @@ router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) =>
       teacherId
     })
     .then(result => {
-      res.json({
-        message: result.message,
-        classcode: result.classcode
-      });
+      res.json(result);
     })
     .catch(error => {
-      res.json(error);
+      res.status(422).send(error);
     });
 });
 

@@ -44,7 +44,7 @@ const createNewClassroom = classroomDetails => {
       .then(classroom => {
         resolve({
           message: "Classroom created successfully",
-          data: classroom.get("classcode")
+          classroom
         });
       })
       .catch(error => {
