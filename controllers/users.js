@@ -98,9 +98,7 @@ getCredential = email => {
     where: {
       email
     },
-    include: [
-        MasterUser
-    ]
+    include: [MasterUser]
   });
 };
 
@@ -130,7 +128,7 @@ phoneNumberExists = number => {
 };
 
 uidExists = (uid, typeOfUser) => {
-  if(typeOfUser === "Student"){
+  if (typeOfUser === "Student") {
     return Student.findOne({
       where: {
         uid
@@ -148,17 +146,46 @@ uidExists = (uid, typeOfUser) => {
 //component data controllers
 
 getProfile = userID => {
-
   return MasterUser.findOne({
     where: {
       id: userID
     },
-    include: [
-        MasterUserPersonal,
-        MasterUserContact
-    ]
-  })
+    include: [MasterUserPersonal, MasterUserContact]
+  });
+};
 
+getPersonalDetails = userID => {
+  return new Promise((resolve, reject) => {
+    Teacher.findOne({
+      where: {
+        id: userID
+      }
+    })
+      .then(teacher => {
+        if (!teacher) {
+          reject({ message: "Teacher does not exist" });
+        } else {
+          return teacher.getMasterUser();
+        }
+      })
+      .then(masterUser => {
+        if (!masterUser) {
+          reject({ message: "User does not exist" });
+        } else {
+          return masterUser.getMasterUserPersonal();
+        }
+      })
+      .then(userPersonalDetails => {
+        if (!userPersonalDetails) {
+          reject({ message: "Details do not exist" });
+        } else {
+          resolve({
+            message: "User personal details found",
+            personalDetails: userPersonalDetails
+          });
+        }
+      });
+  });
 };
 
 // TODO: add GET routes for all async validators
@@ -169,5 +196,6 @@ module.exports = {
   phoneNumberExists,
   uidExists,
   getCredential,
-  getProfile
+  getProfile,
+  getPersonalDetails
 };

@@ -8,60 +8,67 @@ const classroomController = require("../controllers/classrooms");
 //all classroom related routes
 
 //join a classroom - for students
-router.post("/join", userAuth({authorizationOnlyTo: "Student"}), (req, res) => {
-  let classcode = req.body.classcode;
-  let masterId = req.userData.userID;
+router.post(
+  "/join",
+  userAuth({ authorizationOnlyTo: "Student" }),
+  (req, res) => {
+    let classcode = req.body.classcode;
+    let masterId = req.userData.userID;
 
-  let type = req.userData.userType;
+    let type = req.userData.userType;
 
-  if (type !== "Student") {
-    return res.status(401).json({
-      message: "Unauthorized",
-      details: "Only students can join classrooms"
-    });
+    if (type !== "Student") {
+      return res.status(401).json({
+        message: "Unauthorized",
+        details: "Only students can join classrooms"
+      });
+    }
+
+    classroomController
+      .joinClassroom(classcode, masterId)
+      .then(result => {
+        res.json(result);
+      })
+      .catch(error => {
+        res.status(422).json(error);
+      });
   }
-
-  classroomController
-    .joinClassroom(classcode, masterId)
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.status(422).json(error);
-    });
-});
+);
 
 //create a classroom - for teachers
-router.post("/create", userAuth({authorizationOnlyTo: "Teacher"}), (req, res) =>  {
-  let teacherId = req.userData.userID;
-  let type = req.userData.userType;
+router.post(
+  "/create",
+  userAuth({ authorizationOnlyTo: "Teacher" }),
+  (req, res) => {
+    let teacherId = req.userData.userID;
+    let type = req.userData.userType;
 
-  if (type !== "Teacher") {
-    return res.status(401).json({
-      message: "Only teachers can create classrooms"
-    });
+    if (type !== "Teacher") {
+      return res.status(401).json({
+        message: "Only teachers can create classrooms"
+      });
+    }
+
+    let name = req.body.classroomName;
+    let subject = req.body.classroomSubject;
+
+    classroomController
+      .createNewClassroom({
+        name,
+        subject,
+        teacherId
+      })
+      .then(result => {
+        res.json(result);
+      })
+      .catch(error => {
+        res.status(422).send(error);
+      });
   }
-
-  let name = req.body.classroomName;
-  let subject = req.body.classroomSubject;
-
-  classroomController
-    .createNewClassroom({
-      name,
-      subject,
-      teacherId
-    })
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.status(422).send(error);
-    });
-});
+);
 
 //get all classrooms - for students and teachers
 router.get("", userAuth(), (req, res) => {
-
   let masterId = req.userData.userID;
   let typeOfUser = req.userData.userType;
 
@@ -71,10 +78,24 @@ router.get("", userAuth(), (req, res) => {
       res.json(result);
     })
     .catch(error => {
-
-      console.log('Routes#Classroom#Catch', error);
+      console.log("Routes#Classroom#Catch", error);
 
       res.status(400).send(error);
+    });
+});
+
+router.get("/:id", userAuth(), (req, res) => {
+  let classroomID = req.params["id"];
+
+  console.log("@ClassroomRoutes:GetDetails#classroomID", classroomID);
+
+  classroomController
+    .getClassroomDetails(classroomID)
+    .then(classroomDetails => {
+      res.json(classroomDetails);
+    })
+    .catch(error => {
+      res.status(422).send(error);
     });
 });
 

@@ -7,7 +7,9 @@ const {
   Classroom,
   Student,
   Teacher,
-  MasterUser
+  Discussion,
+  MasterUser,
+  MasterUserPersonal
 } = db;
 
 const randomUtility = require("../utilities/random");
@@ -67,7 +69,7 @@ const joinClassroom = (classcode, masterId) => {
         fetchedClassroom = classroom;
 
         if (!fetchedClassroom) {
-          console.log('No classrooms');
+          console.log("No classrooms");
           reject({ message: "Classroom code is invalid" });
         }
 
@@ -112,7 +114,6 @@ const getClassrooms = (masterId, typeOfUser) => {
           return student.getClassrooms();
         })
         .then(classrooms => {
-
           resolve({
             message: "Classrooms retrieved",
             data: classrooms
@@ -144,8 +145,41 @@ const getClassrooms = (masterId, typeOfUser) => {
   });
 };
 
+const getClassroomDetails = classroomID => {
+  return new Promise((resolve, reject) => {
+    Classroom.findOne({
+      where: {
+        id: classroomID
+      },
+      include: [
+        {
+          model: Discussion
+        },
+        {
+          model: Student
+        }
+      ]
+    })
+      .then(classroomDetails => {
+        if (!classroomDetails) {
+          reject({ message: "Classroom does not exist" });
+        } else {
+          resolve({
+            message: "Classroom details fetched",
+            classroomDetails
+          });
+        }
+      })
+      .catch(error => {
+        reject({ message: "Something went wrong" + error.toString() });
+      });
+  });
+};
+
 module.exports = {
   joinClassroom,
   createNewClassroom,
-  getClassrooms
+
+  getClassrooms,
+  getClassroomDetails
 };

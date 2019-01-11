@@ -30,8 +30,7 @@ router.post("/signup", (req, res, next) => {
     })
     .catch(error => {
       res.status(400).json({
-        message:
-          "Something went wrong - "+error.toString()
+        message: "Something went wrong - " + error.toString()
       });
     });
 
@@ -98,7 +97,7 @@ router.get("/email/:email", (req, res, next) => {
     })
     .catch(error => {
       res.status(400).send({
-        message: "Something went wrong - "+error.toString()
+        message: "Something went wrong - " + error.toString()
       });
     });
 });
@@ -119,9 +118,9 @@ router.get("/number/:number", (req, res, next) => {
       }
     })
     .catch(error => {
-    res.status(400).send({
-      message: "Something went wrong - "+error.toString()
-    });
+      res.status(400).send({
+        message: "Something went wrong - " + error.toString()
+      });
     });
 });
 
@@ -142,13 +141,25 @@ router.get("/uid/:uid/type/:type", (req, res, next) => {
       }
     })
     .catch(error => {
-    res.status(400).send({
-      message: "Something went wrong - "+error.toString()
-    });
+      res.status(400).send({
+        message: "Something went wrong - " + error.toString()
+      });
     });
 });
 
 //User data routes
+
+router.get("/personal/:id", userIDAuth(), (req, res) => {
+  const id = req.params["id"];
+
+  UserController.getPersonalDetails(id)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(error => {
+      res.status(422).send(error);
+    });
+});
 
 router.get("/profile/:id", userIDAuth(), (req, res) => {
   const id = req.params["id"];
