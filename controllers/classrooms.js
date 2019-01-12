@@ -153,10 +153,50 @@ const getClassroomDetails = classroomID => {
       },
       include: [
         {
-          model: Discussion
+          model: Discussion,
+          include: [
+            {
+              model: MasterUser,
+              attributes: ["typeOfUser"],
+              include: [
+                {
+                  model: MasterUserPersonal,
+                  attributes: ["firstName", "lastName"]
+                }
+              ]
+            }
+          ]
         },
         {
-          model: Student
+          model: Student,
+          include: [
+            {
+              model: MasterUser,
+              attributes: ["typeOfUser"],
+              include: [
+                {
+                  model: MasterUserPersonal,
+                  attributes: ["firstName", "lastName"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: Teacher,
+          attributes: ["id"],
+          include: [
+            {
+              model: MasterUser,
+              attributes: ["typeOfUser"],
+              include: [
+                {
+                  model: MasterUserPersonal,
+                  attributes: ["firstName", "lastName"]
+                }
+              ]
+            }
+          ]
         }
       ]
     })

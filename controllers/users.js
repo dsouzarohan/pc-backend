@@ -154,11 +154,13 @@ getProfile = userID => {
   });
 };
 
+//todo: remove controller once personal details eager loading is done
 getPersonalDetails = userID => {
   return new Promise((resolve, reject) => {
     Teacher.findOne({
       where: {
         id: userID
+        //have my local history till here biatch
       }
     })
       .then(teacher => {

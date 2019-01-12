@@ -5,7 +5,9 @@ const {
   Discussion,
   DiscussionPost,
   DiscussionPostComment,
-  Classroom
+  Classroom,
+  MasterUser,
+  MasterUserPersonal
 } = require("../models");
 
 //create controllers
@@ -139,7 +141,19 @@ const getAllDiscussions = classroomId => {
     Discussion.findAll({
       where: {
         classroomId
-      }
+      },
+      include: [
+        {
+          model: MasterUser,
+          attributes: ['typeOfUser'],
+          include: [
+            {
+              model: MasterUserPersonal,
+              attributes: ['firstName','lastName']
+            }
+          ]
+        }
+      ]
     })
       .then(discussions => {
         resolve({
@@ -165,10 +179,42 @@ const getDiscussion = discussionId => {
       },
       include: [
         {
+          model: MasterUser,
+          attributes: ['typeOfUser'],
+          include: [
+            {
+              model: MasterUserPersonal,
+              attributes: ['firstName','lastName']
+            }
+          ]
+        },
+        {
           model: DiscussionPost,
           include: [
             {
-              model: DiscussionPostComment
+              model: MasterUser,
+              attributes: ['typeOfUser'],
+              include: [
+                {
+                  model: MasterUserPersonal,
+                  attributes: ['firstName','lastName']
+                }
+              ]
+            },
+            {
+              model: DiscussionPostComment,
+              include: [
+                {
+                  model: MasterUser,
+                  attributes: ['typeOfUser'],
+                  include: [
+                    {
+                      model: MasterUserPersonal,
+                      attributes: ['firstName','lastName']
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
