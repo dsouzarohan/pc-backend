@@ -145,11 +145,11 @@ const getAllDiscussions = classroomId => {
       include: [
         {
           model: MasterUser,
-          attributes: ['typeOfUser'],
+          attributes: ['id','typeOfUser'],
           include: [
             {
               model: MasterUserPersonal,
-              attributes: ['firstName','lastName']
+              attributes: ['id','firstName','lastName']
             }
           ]
         }
@@ -180,11 +180,11 @@ const getDiscussion = discussionId => {
       include: [
         {
           model: MasterUser,
-          attributes: ['typeOfUser'],
+          attributes: ['id','typeOfUser'],
           include: [
             {
               model: MasterUserPersonal,
-              attributes: ['firstName','lastName']
+              attributes: ['id','firstName','lastName']
             }
           ]
         },
@@ -193,11 +193,11 @@ const getDiscussion = discussionId => {
           include: [
             {
               model: MasterUser,
-              attributes: ['typeOfUser'],
+              attributes: ['id','typeOfUser'],
               include: [
                 {
                   model: MasterUserPersonal,
-                  attributes: ['firstName','lastName']
+                  attributes: ['id','firstName','lastName']
                 }
               ]
             },
@@ -206,11 +206,11 @@ const getDiscussion = discussionId => {
               include: [
                 {
                   model: MasterUser,
-                  attributes: ['typeOfUser'],
+                  attributes: ['id','typeOfUser'],
                   include: [
                     {
                       model: MasterUserPersonal,
-                      attributes: ['firstName','lastName']
+                      attributes: ['id','firstName','lastName']
                     }
                   ]
                 }
