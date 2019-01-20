@@ -48,7 +48,7 @@ router.post("/discussionPost/create", userAuth(), (req, res) => {
       res.json(result);
     })
     .catch(error => {
-      res.json(error);
+      res.status(422).send(error);
     });
 });
 
@@ -66,7 +66,7 @@ router.post("/discussionPost/discussionPostComment/create", userAuth(), (req, re
       res.json(result);
     })
     .catch(error => {
-      res.status(400).send(error);
+      res.status(422).send(error);
     });
 });
 

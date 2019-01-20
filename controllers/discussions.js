@@ -80,8 +80,30 @@ const createDiscussionPost = discussionPostDetails => {
       })
       .then(discussionPost => {
         if (discussionPost) {
+          return DiscussionPost.findOne({
+            where: {
+              id: discussionPost.id
+            },
+            include: [
+              {
+                model: MasterUser,
+                attributes: ["id", "typeOfUser"],
+                include: [
+                  {
+                    model: MasterUserPersonal,
+                    attributes: ["id", "firstName", "lastName"]
+                  }
+                ]
+              }
+            ]
+          });
+        }
+      })
+      .then(discussionPost => {
+        if (discussionPost) {
           resolve({
-            message: "Discussion post created"
+            message: "Discussion post created",
+            discussionPost
           });
         }
       })
@@ -117,14 +139,38 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
       })
       .then(discussionPostComment => {
         if (discussionPostComment) {
-          resolve({
-            message: "Discussion Post Comment created"
+          // resolve({
+          //   message: "Discussion Post Comment created"
+          // });
+
+          return DiscussionPostComment.findOne({
+            where: {
+              id: discussionPostComment.id
+            },
+            include: [
+              {
+                model: MasterUser,
+                attributes: ["id", "typeOfUser"],
+                include: [
+                  {
+                    model: MasterUserPersonal,
+                    attributes: ["id", "firstName", "lastName"]
+                  }
+                ]
+              }
+            ]
           });
         } else {
           reject({
             message: "Comment could not be created"
           });
         }
+      })
+      .then(createdDiscussionPostComment => {
+        resolve({
+          message: "Discussion post comment created successfully",
+          discussionComment: createdDiscussionPostComment
+        });
       })
       .catch(error => {
         reject({
@@ -145,11 +191,11 @@ const getAllDiscussions = classroomId => {
       include: [
         {
           model: MasterUser,
-          attributes: ['id','typeOfUser'],
+          attributes: ["id", "typeOfUser"],
           include: [
             {
               model: MasterUserPersonal,
-              attributes: ['id','firstName','lastName']
+              attributes: ["id", "firstName", "lastName"]
             }
           ]
         }
@@ -177,14 +223,15 @@ const getDiscussion = discussionId => {
       where: {
         id: discussionId
       },
+      order: [[DiscussionPost, "createdAt", "DESC"],[DiscussionPost, DiscussionPostComment, "createdAt", "DESC"]],
       include: [
         {
           model: MasterUser,
-          attributes: ['id','typeOfUser'],
+          attributes: ["id", "typeOfUser"],
           include: [
             {
               model: MasterUserPersonal,
-              attributes: ['id','firstName','lastName']
+              attributes: ["id", "firstName", "lastName"]
             }
           ]
         },
@@ -193,11 +240,11 @@ const getDiscussion = discussionId => {
           include: [
             {
               model: MasterUser,
-              attributes: ['id','typeOfUser'],
+              attributes: ["id", "typeOfUser"],
               include: [
                 {
                   model: MasterUserPersonal,
-                  attributes: ['id','firstName','lastName']
+                  attributes: ["id", "firstName", "lastName"]
                 }
               ]
             },
@@ -206,11 +253,11 @@ const getDiscussion = discussionId => {
               include: [
                 {
                   model: MasterUser,
-                  attributes: ['id','typeOfUser'],
+                  attributes: ["id", "typeOfUser"],
                   include: [
                     {
                       model: MasterUserPersonal,
-                      attributes: ['id','firstName','lastName']
+                      attributes: ["id", "firstName", "lastName"]
                     }
                   ]
                 }
