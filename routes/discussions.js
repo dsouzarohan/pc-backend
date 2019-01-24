@@ -72,24 +72,11 @@ router.post("/discussionPost/discussionPostComment/create", userAuth(), (req, re
 
 //get discussions
 
-router.get("/all/:classroomId", userAuth(), (req, res) => {
-  let classroomId = req.params.classroomId;
+router.get("/", userAuth(), (req, res) => {
+  let classroomId = req.query.classroomId;
 
   discussionController
     .getAllDiscussions(classroomId)
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.json(error);
-    });
-});
-
-router.get("/:discussionId", userAuth(), (req, res) => {
-  let discussionId = req.params.discussionId;
-
-  discussionController
-    .getDiscussion(discussionId)
     .then(result => {
       res.json(result);
     })

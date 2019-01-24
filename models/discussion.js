@@ -1,10 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Discussion = sequelize.define('Discussion', {
+  const discussion = sequelize.define('discussion', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      autoIncrement: true,
+      allowNull: false
     },
     topic: {
       type: DataTypes.STRING,
@@ -15,21 +16,24 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
   }, {});
-  Discussion.associate = function(models) {
+  discussion.associate = function(models) {
     // associations can be defined here
 
-    Discussion.belongsTo(models.MasterUser, {
-      foreignKey: "startedBy"
+    discussion.belongsTo(models.masterUser, {
+      foreignKey: "startedBy",
+      as: "author"
     });
 
-    Discussion.belongsTo(models.Classroom, {
-      foreignKey: "classroomId"
+    discussion.belongsTo(models.classroom, {
+      foreignKey: "classroomId",
+      as: "classroom"
     });
 
-    Discussion.hasMany(models.DiscussionPost, {
-      foreignKey: "discussionId"
+    discussion.hasMany(models.discussionPost, {
+      foreignKey: "discussionId",
+      as: "discussionPosts"
     });
 
   };
-  return Discussion;
+  return discussion;
 };

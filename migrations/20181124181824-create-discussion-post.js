@@ -1,11 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('DiscussionPosts', {
+    return queryInterface.createTable('discussionPosts', {
       id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       body: {
         type: Sequelize.TEXT,
@@ -20,24 +21,24 @@ module.exports = {
         type: Sequelize.DATE
       },
       discussionId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Discussions",
+          model: "discussions",
           key: "id"
         }
       },
       postedBy: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "MasterUsers",
+          model: "masterUsers",
           key: "id"
         }
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('DiscussionPosts');
+    return queryInterface.dropTable('discussionPosts');
   }
 };

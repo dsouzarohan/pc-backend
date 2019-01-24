@@ -1,26 +1,30 @@
 const db = require("../models");
 
-const {
-  Sequelize, sequelize,
-  Teacher, Classroom, MasterUser, Student,
-  Discussion, DiscussionPost, DiscussionPostComment
-} = db;
+const { masterUser, student, masterUserPersonal, announcement, teacher, sequelize, classroom } = db;
 
-const User = sequelize.define('user', {
-  name: Sequelize.STRING
-});
-const UserRole  = sequelize.define('userRole', {
-  roleName: Sequelize.STRING
-});
-
-UserRole.hasMany(User, {as: 'role'});
-
-
-UserRole.sync({
-  force: true
-});
-
-
-User.sync({
-  force: true
+classroom.findOne({
+  where: {
+    id: 3
+  },
+  include: [
+    {
+      association: "students",
+      include: [
+        {
+          model: masterUser,
+          as: "masterUserDetails",
+          attributes: ["id","typeOfUser"],
+          include: [
+              {
+                model: masterUserPersonal,
+                as: "personalDetails",
+                attributes: ["id","firstName","lastName"]
+              }
+          ]
+        }
+      ]
+    }
+  ]
+}).then( fetchedClassroom => {
+  console.log(fetchedClassroom.get({plain: true}));
 });

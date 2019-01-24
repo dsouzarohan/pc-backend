@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Student = sequelize.define(
-    "Student",
+  const student = sequelize.define(
+    "student",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       stream: {
         type: DataTypes.STRING,
@@ -20,19 +21,22 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Student.associate = function(models) {
+  student.associate = function(models) {
     // associations can be defined here
 
       //master association
-      Student.belongsTo(models.MasterUser, {
-        foreignKey: "masterUserId"
+      student.belongsTo(models.masterUser, {
+        foreignKey: "masterUserId",
+        as: "masterUserDetails"
       });
 
     //student classroom n:m association
-    Student.belongsToMany(models.Classroom, {
-      through: "StudentClassrooms"
+    student.belongsToMany(models.classroom, {
+      through: "studentClassrooms",
+      as: "classrooms",
+      foreignKey: "studentId"
     });
 
   };
-  return Student;
+  return student;
 };

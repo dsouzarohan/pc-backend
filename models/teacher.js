@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Teacher = sequelize.define(
-    "Teacher",
+  const teacher = sequelize.define(
+    "teacher",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       uid: {
         type: DataTypes.INTEGER,
@@ -16,18 +17,27 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Teacher.associate = function(models) {
+  teacher.associate = function(models) {
     // associations can be defined here
 
     //master association
-    Teacher.belongsTo(models.MasterUser, {
-      foreignKey: "masterUserId"
+    teacher.belongsTo(models.masterUser, {
+      foreignKey: "masterUserId",
+      as: "masterUserDetails"
     });
 
     //classroom association
-    Teacher.hasMany(models.Classroom, {
-      foreignKey: "createdBy"
-    })
+    teacher.hasMany(models.classroom, {
+      foreignKey: "createdBy",
+      as: "classrooms"
+    });
+
+    //announcements association
+
+    teacher.hasMany(models.announcement, {
+      foreignKey: "createdBy",
+      as: "announcements"
+    });
   };
-  return Teacher;
+  return teacher;
 };

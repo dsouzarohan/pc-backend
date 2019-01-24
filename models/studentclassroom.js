@@ -1,10 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const StudentClassroom = sequelize.define('StudentClassroom', {
+  const studentClassroom = sequelize.define('studentClassroom', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      autoIncrement: true,
+      allowNull: false
     },
     studentId: {
       type: DataTypes.UUID,
@@ -15,17 +16,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {});
-  StudentClassroom.associate = function(models) {
+  studentClassroom.associate = function(models) {
     // associations can be defined here
 
-    StudentClassroom.belongsTo(models.Classroom, {
+    studentClassroom.belongsTo(models.classroom, {
       foreignKey: "classroomId"
     });
 
-    StudentClassroom.belongsTo(models.Student, {
+    studentClassroom.belongsTo(models.student, {
       foreignKey: 'studentId'
     });
 
   };
-  return StudentClassroom;
+  return studentClassroom;
 };

@@ -5,12 +5,12 @@ const {
   Sequelize,
   sequelize,
 
-  MasterUser,
-  MasterUserContact,
-  MasterUserPersonal,
-  UserCredential,
-  Student,
-  Teacher
+  masterUser,
+  masterUserContact,
+  masterUserPersonal,
+  userCredential,
+  student,
+  teacher
 } = db;
 
 const { Op } = Sequelize;
@@ -18,21 +18,21 @@ const { Op } = Sequelize;
 //todo: change all return values of controllers to custom promises
 
 createUser = user => {
-  let masterUser;
+  let createdMasterUser;
 
   let { type, personal, contact, credentials } = user;
 
   return sequelize.transaction(transaction => {
-    return MasterUser.create(
+    return masterUser.create(
       {
         typeOfUser: type.type
       },
       { transaction }
     )
-      .then(createdMasterUser => {
-        masterUser = createdMasterUser;
+      .then( newMasterUser => {
+        createdMasterUser = newMasterUser;
 
-        return masterUser.createMasterUserPersonal(
+        return createdMasterUser.createPersonalDetails(
           {
             firstName: personal.firstName,
             lastName: personal.lastName,
@@ -43,8 +43,8 @@ createUser = user => {
           { transaction }
         );
       })
-      .then(createdMasterUserPersonal => {
-        return masterUser.createMasterUserContact(
+      .then(newPersonalDetails => {
+        return createdMasterUser.createContactDetails(
           {
             phoneNumber: contact.mobileNumber,
             alternateNumber:
@@ -55,9 +55,9 @@ createUser = user => {
           { transaction }
         );
       })
-      .then(createdMasterUserContact => {
+      .then(createdContactDetails => {
         if (type.type === "Student") {
-          return masterUser.createStudent(
+          return createdMasterUser.createStudent(
             {
               stream: type.stream,
               uid: type.uid
@@ -66,7 +66,7 @@ createUser = user => {
           );
         }
 
-        return masterUser.createTeacher(
+        return createdMasterUser.createTeacher(
           {
             uid: type.uid
           },
@@ -77,7 +77,7 @@ createUser = user => {
         return passwordUtility.hashPassword(credentials.password);
       })
       .then(hashedPassword => {
-        return masterUser.createUserCredential(
+        return createdMasterUser.createUserCredential(
           {
             email: credentials.email,
             password: hashedPassword
@@ -86,26 +86,29 @@ createUser = user => {
         );
       })
       .catch(error => {
-        error;
-        ("In transaction catch");
+
+        console.log("In transaction catch", error);
         return Promise.reject(error);
       });
   });
 };
 
 getCredential = email => {
-  return UserCredential.findOne({
+  return userCredential.findOne({
     where: {
       email
     },
-    include: [MasterUser]
+    include: [{
+      model: masterUser,
+      as: "masterUserDetails"
+    }]
   });
 };
 
 //unique key validators
 
 userEmailExists = email => {
-  return MasterUserContact.findOne({
+  return masterUserContact.findOne({
     where: {
       email
     }
@@ -113,7 +116,7 @@ userEmailExists = email => {
 };
 
 phoneNumberExists = number => {
-  return MasterUserContact.findOne({
+  return masterUserContact.findOne({
     where: {
       [Op.or]: [
         {
@@ -129,13 +132,13 @@ phoneNumberExists = number => {
 
 uidExists = (uid, typeOfUser) => {
   if (typeOfUser === "Student") {
-    return Student.findOne({
+    return student.findOne({
       where: {
         uid
       }
     });
   } else {
-    return Teacher.findOne({
+    return teacher.findOne({
       where: {
         uid
       }
@@ -146,18 +149,24 @@ uidExists = (uid, typeOfUser) => {
 //component data controllers
 
 getProfile = userID => {
-  return MasterUser.findOne({
+  return masterUser.findOne({
     where: {
       id: userID
     },
-    include: [MasterUserPersonal, MasterUserContact]
+    include: [{
+      model: masterUserPersonal,
+      as: "personalDetails"
+    }, {
+      model: masterUserContact,
+      as: "contactDetails"
+    }]
   });
 };
 
 //todo: remove controller once personal details eager loading is done
 getPersonalDetails = userID => {
   return new Promise((resolve, reject) => {
-    Teacher.findOne({
+    teacher.findOne({
       where: {
         id: userID
         //have my local history till here biatch
@@ -167,14 +176,14 @@ getPersonalDetails = userID => {
         if (!teacher) {
           reject({ message: "Teacher does not exist" });
         } else {
-          return teacher.getMasterUser();
+          return teacher.getMasterUserDetails();
         }
       })
       .then(masterUser => {
         if (!masterUser) {
           reject({ message: "User does not exist" });
         } else {
-          return masterUser.getMasterUserPersonal();
+          return masterUser.getPersonalDetails();
         }
       })
       .then(userPersonalDetails => {

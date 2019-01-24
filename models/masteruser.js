@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const MasterUser = sequelize.define(
-    "MasterUser",
+  const masterUser = sequelize.define(
+    "masterUser",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       typeOfUser: {
         type: DataTypes.STRING,
@@ -15,44 +16,55 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  MasterUser.associate = function(models) {
+  masterUser.associate = function(models) {
     // associations can be defined here
 
     //master associations
-    MasterUser.hasOne(models.MasterUserPersonal, {
-      foreignKey: "masterUserId"
+    masterUser.hasOne(models.masterUserPersonal, {
+      foreignKey: "masterUserId",
+      as: "personalDetails"
     });
-    MasterUser.hasOne(models.MasterUserContact, {
-      foreignKey: "masterUserId"
+
+
+    masterUser.hasOne(models.masterUserContact, {
+      foreignKey: "masterUserId",
+      as: "contactDetails"
     });
 
     //user associations
-    MasterUser.hasOne(models.Student, {
-      foreignKey: "masterUserId"
+    masterUser.hasOne(models.student, {
+      foreignKey: "masterUserId",
+      as: "student"
     });
-    MasterUser.hasOne(models.Teacher, {
-      foreignKey: "masterUserId"
+
+    masterUser.hasOne(models.teacher, {
+      foreignKey: "masterUserId",
+      as: "teacher"
     });
 
     //credential association
-    MasterUser.hasOne(models.UserCredential, {
-      foreignKey: "masterUserId"
+    masterUser.hasOne(models.userCredential, {
+      foreignKey: "masterUserId",
+      as: "userCredential"
     });
 
     //discussion association
-    MasterUser.hasMany(models.Discussion, {
-      foreignKey: "startedBy"
+    masterUser.hasMany(models.discussion, {
+      foreignKey: "startedBy",
+      as: "discussions"
     });
 
-    MasterUser.hasMany(models.DiscussionPost, {
-      foreignKey: "postedBy"
+    masterUser.hasMany(models.discussionPost, {
+      foreignKey: "postedBy",
+      as: "discussionPosts"
     });
 
-    MasterUser.hasMany(models.DiscussionPostComment, {
-      foreignKey: "commentedBy"
+    masterUser.hasMany(models.discussionPostComment, {
+      foreignKey: "commentedBy",
+      as: "discussionPostComments"
     });
 
   };
 
-  return MasterUser;
+  return masterUser;
 };

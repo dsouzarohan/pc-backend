@@ -1,10 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Classroom = sequelize.define('Classroom', {
+  const classroom = sequelize.define('classroom', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      autoIncrement: true,
+      allowNull: false
     },
     name: {
       type: DataTypes.STRING,
@@ -15,30 +16,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    classcode: {
+    classCode: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     }
   }, {});
-  Classroom.associate = function(models) {
+  classroom.associate = function(models) {
     // associations can be defined here
 
-    Classroom.belongsTo(models.Teacher, {
-      foreignKey: "createdBy"
+    classroom.belongsTo(models.teacher, {
+      foreignKey: "createdBy",
+      as: "teacher"
     });
 
 
     //student classroom n:m association
-    Classroom.belongsToMany(models.Student, {
-      through: 'StudentClassrooms'
+    classroom.belongsToMany(models.student, {
+      through: 'studentClassrooms',
+      foreignKey: "classroomId",
+      as: "students"
     });
 
     //discussion associations
-    Classroom.hasMany(models.Discussion, {
-      foreignKey: "classroomId"
+    classroom.hasMany(models.discussion, {
+      foreignKey: "classroomId",
+      as: "discussions"
     });
 
   };
-  return Classroom;
+  return classroom;
 };

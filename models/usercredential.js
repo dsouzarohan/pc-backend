@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const UserCredential = sequelize.define(
-    "UserCredential",
+  const userCredential = sequelize.define(
+    "userCredential",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       password: {
         type: DataTypes.STRING,
@@ -15,15 +16,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  UserCredential.associate = function(models) {
+  userCredential.associate = function(models) {
     // associations can be defined here
 
       //master associations
-      UserCredential.belongsTo(models.MasterUser, {
-        foreignKey: "masterUserId"
+      userCredential.belongsTo(models.masterUser, {
+        foreignKey: "masterUserId",
+        as: "masterUserDetails"
       });
-      UserCredential.belongsTo(models.MasterUserContact, {foreignKey: 'email', targetKey: 'email'});
+
+      userCredential.belongsTo(models.masterUserContact, {
+        foreignKey: 'email',
+        targetKey: 'email',
+        as: "contactDetails"
+      });
 
   };
-  return UserCredential;
+  return userCredential;
 };

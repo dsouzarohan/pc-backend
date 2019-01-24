@@ -1,25 +1,26 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('StudentClassrooms', {
+    return queryInterface.createTable('studentClassrooms', {
       id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       studentId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Students',
+          model: 'students',
           key: 'id'
         }
       },
       classroomId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Classrooms',
+          model: 'classrooms',
           key: 'id'
         }
       },
@@ -34,6 +35,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('StudentClassrooms');
+    return queryInterface.dropTable('studentClassrooms');
   }
 };

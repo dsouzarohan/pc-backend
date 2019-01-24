@@ -1,29 +1,30 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('DiscussionPostComments', {
+    return queryInterface.createTable('discussionPostComments', {
       id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       body: {
         type: Sequelize.TEXT,
         allowNull: false
       },
       discussionPostId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "DiscussionPosts",
+          model: "discussionPosts",
           key: "id"
         }
       },
       commentedBy: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "MasterUsers",
+          model: "masterUsers",
           key: "id"
         }
       },
@@ -38,6 +39,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('DiscussionPostComments');
+    return queryInterface.dropTable('discussionPostComments');
   }
 };

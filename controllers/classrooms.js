@@ -4,12 +4,12 @@ const {
   Sequelize,
   sequelize,
 
-  Classroom,
-  Student,
-  Teacher,
-  Discussion,
-  MasterUser,
-  MasterUserPersonal
+  classroom,
+  student,
+  teacher,
+  discussion,
+  masterUser,
+  masterUserPersonal
 } = db;
 
 const randomUtility = require("../utilities/random");
@@ -18,53 +18,60 @@ const createNewClassroom = classroomDetails => {
   let { name, subject, teacherId } = classroomDetails;
 
   return new Promise((resolve, reject) => {
-    MasterUser.findOne({
-      where: {
-        id: teacherId
-      }
-    })
-      .then(masterUser => {
-        if (!masterUser) {
+    masterUser
+      .findOne({
+        where: {
+          id: teacherId
+        }
+      })
+      .then(createdMasterUser => {
+        if (!createdMasterUser) {
           reject({ message: "User does not exist" });
         }
 
-        return masterUser.getTeacher();
+        return createdMasterUser.getTeacher();
       })
-      .then(teacher => {
-        if (!teacher) {
+      .then(fetchedTeacher => {
+        console.log("Fetched teacher", fetchedTeacher.get({ plain: true }));
+
+        if (!fetchedTeacher) {
           reject({ message: "Teacher does not exist" });
         }
 
-        let classcode = randomUtility.randomString();
+        let classCode = randomUtility.randomString();
 
-        return teacher.createClassroom({
+        return fetchedTeacher.createClassroom({
           name: name,
           subject: subject,
-          classcode: classcode
+          classCode: classCode
         });
       })
-      .then(classroom => {
+      .then(createdClassroom => {
+        console.log("Created classroom", createdClassroom.get({ plain: true }));
+
         resolve({
           message: "Classroom created successfully",
-          classroom
+          createdClassroom
         });
       })
       .catch(error => {
+        console.log("Controller catch", error);
         reject({ message: "Something went wrong - " + error.toString() });
       });
   });
 };
 
-const joinClassroom = (classcode, masterId) => {
+const joinClassroom = (classCode, masterId) => {
   let fetchedClassroom;
   let fetchedStudent;
 
   return new Promise((resolve, reject) => {
-    Classroom.findOne({
-      where: {
-        classcode
-      }
-    })
+    classroom
+      .findOne({
+        where: {
+          classCode
+        }
+      })
       .then(classroom => {
         fetchedClassroom = classroom;
 
@@ -73,9 +80,9 @@ const joinClassroom = (classcode, masterId) => {
           reject({ message: "Classroom code is invalid" });
         }
 
-        return Student.findOne({
+        return student.findOne({
           where: {
-            masterUserID: masterId
+            masterUserId: masterId
           }
         });
       })
@@ -105,18 +112,67 @@ const joinClassroom = (classcode, masterId) => {
 const getClassrooms = (masterId, typeOfUser) => {
   return new Promise((resolve, reject) => {
     if (typeOfUser === "Student") {
-      Student.findOne({
-        where: {
-          masterUserID: masterId
-        }
-      })
-        .then(student => {
-          return student.getClassrooms();
+      student
+        .findOne({
+          where: {
+            masterUserID: masterId
+          }
         })
-        .then(classrooms => {
+        .then(fetchedStudent => {
+          return student.findOne({
+            where: {
+              id: fetchedStudent.id
+            },
+            include: [
+              {
+                model: classroom,
+                as: "classrooms",
+                include: [
+                  {
+                    model: student,
+                    as: "students",
+                    include: [
+                      {
+                        model: masterUser,
+                        as: "masterUserDetails",
+                        attributes: ["id", "typeOfUser"],
+                        include: [
+                          {
+                            model: masterUserPersonal,
+                            as: "personalDetails",
+                            attributes: ["id", "firstName", "lastName"]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    model: teacher,
+                    as: "teacher",
+                    include: [
+                      {
+                        model: masterUser,
+                        as: "masterUserDetails",
+                        attributes: ["id", "typeOfUser"],
+                        include: [
+                          {
+                            model: masterUserPersonal,
+                            as: "personalDetails",
+                            attributes: ["id", "firstName", "lastName"]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          });
+        })
+        .then(fetchedStudentClassrooms => {
           resolve({
-            message: "Classrooms retrieved",
-            data: classrooms
+            message: "Classrooms have been retrieved",
+            data: fetchedStudentClassrooms.classrooms
           });
         })
         .catch(error => {
@@ -124,18 +180,66 @@ const getClassrooms = (masterId, typeOfUser) => {
           reject({ message: "Something went wrong - " + error.toString() });
         });
     } else {
-      Teacher.findOne({
-        where: {
-          masterUserID: masterId
-        }
-      })
-        .then(teacher => {
-          return teacher.getClassrooms();
+      teacher
+        .findOne({
+          where: {
+            masterUserID: masterId
+          }
         })
-        .then(classrooms => {
+        .then(fetchedTeacher => {
+          return teacher.findOne({
+            where: {
+              id: fetchedTeacher.id
+            },include: [
+              {
+                model: classroom,
+                as: "classrooms",
+                include: [
+                  {
+                    model: student,
+                    as: "students",
+                    include: [
+                      {
+                        model: masterUser,
+                        as: "masterUserDetails",
+                        attributes: ["id", "typeOfUser"],
+                        include: [
+                          {
+                            model: masterUserPersonal,
+                            as: "personalDetails",
+                            attributes: ["id", "firstName", "lastName"]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    model: teacher,
+                    as: "teacher",
+                    include: [
+                      {
+                        model: masterUser,
+                        as: "masterUserDetails",
+                        attributes: ["id", "typeOfUser"],
+                        include: [
+                          {
+                            model: masterUserPersonal,
+                            as: "personalDetails",
+                            attributes: ["id", "firstName", "lastName"]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          });
+        })
+        .then(fetchedTeacherClassrooms => {
           resolve({
             message: "Classrooms retrieved",
-            data: classrooms
+            data: fetchedTeacherClassrooms.classrooms
           });
         })
         .catch(error => {
@@ -145,81 +249,81 @@ const getClassrooms = (masterId, typeOfUser) => {
   });
 };
 
-const getClassroomDetails = classroomID => {
-  return new Promise((resolve, reject) => {
-    Classroom.findOne({
-      where: {
-        id: classroomID
-      },
-      include: [
-        {
-          model: Discussion,
-          include: [
-            {
-              model: MasterUser,
-              attributes: ["typeOfUser"],
-              include: [
-                {
-                  model: MasterUserPersonal,
-                  attributes: ["firstName", "lastName"]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          model: Student,
-          include: [
-            {
-              model: MasterUser,
-              attributes: ["typeOfUser"],
-              include: [
-                {
-                  model: MasterUserPersonal,
-                  attributes: ["firstName", "lastName"]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          model: Teacher,
-          attributes: ["id"],
-          include: [
-            {
-              model: MasterUser,
-              attributes: ["typeOfUser"],
-              include: [
-                {
-                  model: MasterUserPersonal,
-                  attributes: ["firstName", "lastName"]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    })
-      .then(classroomDetails => {
-        if (!classroomDetails) {
-          reject({ message: "Classroom does not exist" });
-        } else {
-          resolve({
-            message: "Classroom details fetched",
-            classroomDetails
-          });
-        }
-      })
-      .catch(error => {
-        reject({ message: "Something went wrong" + error.toString() });
-      });
-  });
-};
+// const getClassroomDetails = classroomID => {
+//   return new Promise((resolve, reject) => {
+//     classroom.findOne({
+//       where: {
+//         id: classroomID
+//       },
+//       include: [
+//         {
+//           model: discussion,
+//           as: "discussions"
+//         },
+//         {
+//           model: student,
+//           as: "students",
+//           include: [
+//             {
+//               model: masterUser,
+//               as: "masterUserDetails",
+//               attributes: ["id","typeOfUser"],
+//               include: [
+//                 {
+//                   model: masterUserPersonal,
+//                   as: "personalDetails",
+//                   attributes: ["id","firstName","lastName"]
+//                 }
+//               ]
+//             }
+//           ]
+//         },
+//         {
+//           model: teacher,
+//           as: "teacher",
+//           include: [
+//             {
+//               model: masterUser,
+//               as: "masterUserDetails",
+//               attributes: ["id","typeOfUser"],
+//               include: [
+//                 {
+//                   model: masterUserPersonal,
+//                   as: "personalDetails",
+//                   attributes: ["id","firstName","lastName"]
+//                 }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     })
+//       .then(classroomDetails => {
+//
+//         console.log("Classroom details", classroomDetails.get({plain: true}));
+//
+//         if (!classroomDetails) {
+//           reject({ message: "Classroom does not exist" });
+//           console.log("Didn't get details");
+//         } else {
+//           console.log("Got details");
+//           resolve({
+//             message: "Classroom details fetched",
+//             classroomDetails
+//           });
+//         }
+//       })
+//       .catch(error => {
+//
+//         console.log("Controller catch - Error", error);
+//         reject({ message: "Something went wrong" + error.toString() });
+//       });
+//   });
+// };
 
 module.exports = {
   joinClassroom,
   createNewClassroom,
 
-  getClassrooms,
-  getClassroomDetails
+  getClassrooms
 };

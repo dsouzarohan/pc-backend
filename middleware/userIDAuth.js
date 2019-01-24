@@ -24,6 +24,8 @@ module.exports = ( options ) => {
       const token = tokenHeader.split(' ')[1];
       const decodedToken = jwt.verify(token, "MYSECRETTHATWILLBECHANGEDSOON");
 
+      console.log("@UserIDMiddleware#Decoded token", decodedToken);
+
       if(!decodedToken){
         res.status(401).json({
           message: "You are unauthorized to access this resource"

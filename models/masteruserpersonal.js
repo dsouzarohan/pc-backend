@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const MasterUserPersonal = sequelize.define(
-    "MasterUserPersonal",
+  const masterUserPersonal = sequelize.define(
+    "masterUserPersonal",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       firstName: {
         type: DataTypes.STRING,
@@ -32,13 +33,14 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
     }
   );
-  MasterUserPersonal.associate = function(models) {
+  masterUserPersonal.associate = function(models) {
     // associations can be defined here
     //master associations
 
-    MasterUserPersonal.belongsTo(models.MasterUser, {
-      foreignKey: "masterUserId"
+    masterUserPersonal.belongsTo(models.masterUser, {
+      foreignKey: "masterUserId",
+      as: "masterUserDetails"
     });
   };
-  return MasterUserPersonal;
+  return masterUserPersonal;
 };

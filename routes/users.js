@@ -49,7 +49,7 @@ router.post("/signin", (req, res, next) => {
         throw new Error("Woops! This email address does not exist");
 
       fetchedUserCredentials = userCredentials;
-      fetchedMasterUser = userCredentials.MasterUser;
+      fetchedMasterUser = userCredentials.masterUserDetails;
 
       return passwordUtility.comparePasswords(
         credentials.password,

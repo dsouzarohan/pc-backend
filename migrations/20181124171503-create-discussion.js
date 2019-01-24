@@ -1,11 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Discussions', {
+    return queryInterface.createTable('discussions', {
       id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       topic: {
         type: Sequelize.STRING,
@@ -16,18 +17,18 @@ module.exports = {
         allowNull: false
       },
       startedBy: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "MasterUsers",
+          model: "masterUsers",
           key: "id"
         }
       },
       classroomId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Classrooms",
+          model: "classrooms",
           key: "id"
         }
       },
@@ -42,6 +43,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Discussions');
+    return queryInterface.dropTable('discussions');
   }
 };

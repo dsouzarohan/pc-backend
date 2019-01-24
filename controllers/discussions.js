@@ -2,12 +2,12 @@ const {
   Sequelize,
   sequelize,
 
-  Discussion,
-  DiscussionPost,
-  DiscussionPostComment,
-  Classroom,
-  MasterUser,
-  MasterUserPersonal
+  discussion,
+  discussionPost,
+  discussionPostComment,
+  classroom,
+  masterUser,
+  masterUserPersonal
 } = require("../models");
 
 //create controllers
@@ -19,35 +19,58 @@ const createDiscussion = discussionDetails => {
     let classroomId = discussionDetails.classroomId;
     let userId = discussionDetails.userId;
 
-    Classroom.findOne({
-      where: {
-        id: classroomId
-      }
-    })
-      .then(classroom => {
-        if (!classroom) {
+    classroom
+      .findOne({
+        where: {
+          id: classroomId
+        }
+      })
+      .then(fetchedClassroom => {
+        if (!fetchedClassroom) {
           reject({
             message:
               "Classroom in which discussion is to be created does not exist"
           });
         }
 
-        return classroom.createDiscussion({
+        return fetchedClassroom.createDiscussion({
           topic,
           body,
           startedBy: userId
         });
       })
-      .then(discussion => {
-        if (discussion) {
-          resolve({
-            message: "Discussion created"
+      .then(createdDiscussion => {
+        if (createdDiscussion) {
+          return discussion.findOne({
+            where: {
+              id: createdDiscussion.id
+            },
+            include: [
+              {
+                model: masterUser,
+                as: "author",
+                attributes: ["id", "typeOfUser"],
+                include: [
+                  {
+                    model: masterUserPersonal,
+                    as: "personalDetails",
+                    attributes: ["id", "firstName", "lastName"]
+                  }
+                ]
+              }
+            ]
           });
         } else {
           reject({
             message: "Discussion not created"
           });
         }
+      })
+      .then(createdDiscussion => {
+        resolve({
+          message: "Discussion created successfully",
+          discussion: createdDiscussion
+        });
       })
       .catch(error => {
         reject({
@@ -61,36 +84,39 @@ const createDiscussionPost = discussionPostDetails => {
   return new Promise((resolve, reject) => {
     let { discussionId, userId, body } = discussionPostDetails;
 
-    Discussion.findOne({
-      where: {
-        id: discussionId
-      }
-    })
-      .then(discussion => {
-        if (!discussion) {
+    discussion
+      .findOne({
+        where: {
+          id: discussionId
+        }
+      })
+      .then(fetchedDiscussion => {
+        if (!fetchedDiscussion) {
           reject({
             message: "Discussion on which post is to be created does not exist"
           });
         }
 
-        return discussion.createDiscussionPost({
+        return fetchedDiscussion.createDiscussionPost({
           body,
           postedBy: userId
         });
       })
-      .then(discussionPost => {
-        if (discussionPost) {
-          return DiscussionPost.findOne({
+      .then(createdDiscussionPost => {
+        if (createdDiscussionPost) {
+          return discussionPost.findOne({
             where: {
-              id: discussionPost.id
+              id: createdDiscussionPost.id
             },
             include: [
               {
-                model: MasterUser,
+                model: masterUser,
+                as: "poster",
                 attributes: ["id", "typeOfUser"],
                 include: [
                   {
-                    model: MasterUserPersonal,
+                    model: masterUserPersonal,
+                    as: "personalDetails",
                     attributes: ["id", "firstName", "lastName"]
                   }
                 ]
@@ -99,11 +125,11 @@ const createDiscussionPost = discussionPostDetails => {
           });
         }
       })
-      .then(discussionPost => {
-        if (discussionPost) {
+      .then(fetchedDiscussionPost => {
+        if (fetchedDiscussionPost) {
           resolve({
             message: "Discussion post created",
-            discussionPost
+            discussionPost: fetchedDiscussionPost
           });
         }
       })
@@ -119,41 +145,44 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
   return new Promise((resolve, reject) => {
     let { userId, discussionPostId, body } = discussionPostCommentDetails;
 
-    DiscussionPost.findOne({
-      where: {
-        id: discussionPostId
-      }
-    })
-      .then(discussionPost => {
-        if (!discussionPost) {
+    discussionPost
+      .findOne({
+        where: {
+          id: discussionPostId
+        }
+      })
+      .then(fetchedDiscussionPost => {
+        if (!fetchedDiscussionPost) {
           reject({
             message:
               "Discussion post on which comment is to be created does not exist"
           });
         }
 
-        return discussionPost.createDiscussionPostComment({
+        return fetchedDiscussionPost.createDiscussionPostComment({
           body,
           commentedBy: userId
         });
       })
-      .then(discussionPostComment => {
-        if (discussionPostComment) {
+      .then(createdDiscussionPostComment => {
+        if (createdDiscussionPostComment) {
           // resolve({
           //   message: "Discussion Post Comment created"
           // });
 
-          return DiscussionPostComment.findOne({
+          return discussionPostComment.findOne({
             where: {
-              id: discussionPostComment.id
+              id: createdDiscussionPostComment.id
             },
             include: [
               {
-                model: MasterUser,
+                model: masterUser,
+                as: "commenter",
                 attributes: ["id", "typeOfUser"],
                 include: [
                   {
-                    model: MasterUserPersonal,
+                    model: masterUserPersonal,
+                    as: "personalDetails",
                     attributes: ["id", "firstName", "lastName"]
                   }
                 ]
@@ -166,10 +195,10 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
           });
         }
       })
-      .then(createdDiscussionPostComment => {
+      .then(fetchedDiscussionPostComment => {
         resolve({
           message: "Discussion post comment created successfully",
-          discussionComment: createdDiscussionPostComment
+          discussionComment: fetchedDiscussionPostComment
         });
       })
       .catch(error => {
@@ -184,23 +213,74 @@ const createDiscussionPostComment = discussionPostCommentDetails => {
 
 const getAllDiscussions = classroomId => {
   return new Promise((resolve, reject) => {
-    Discussion.findAll({
-      where: {
-        classroomId
-      },
-      include: [
-        {
-          model: MasterUser,
-          attributes: ["id", "typeOfUser"],
-          include: [
-            {
-              model: MasterUserPersonal,
-              attributes: ["id", "firstName", "lastName"]
-            }
+    discussion
+      .findAll({
+        where: {
+          classroomId
+        },
+        order: [
+          [
+            { model: discussionPost, as: "discussionPosts" },
+            "createdAt",
+            "DESC"
+          ],
+          [
+            { model: discussionPost, as: "discussionPosts" },
+            { model: discussionPostComment, as: "discussionPostComments" },
+            "createdAt",
+            "DESC"
           ]
-        }
-      ]
-    })
+        ],
+        include: [
+          {
+            model: masterUser,
+            as: "author",
+            attributes: ["id", "typeOfUser"],
+            include: [
+              {
+                model: masterUserPersonal,
+                as: "personalDetails",
+                attributes: ["id", "firstName", "lastName"]
+              }
+            ]
+          },{
+            model: discussionPost,
+            as: "discussionPosts",
+            include: [
+              {
+                model: masterUser,
+                as: "poster",
+                attributes: ["id", "typeOfUser"],
+                include: [
+                  {
+                    model: masterUserPersonal,
+                    as: "personalDetails",
+                    attributes: ["id", "firstName", "lastName"]
+                  }
+                ]
+              },
+              {
+                model: discussionPostComment,
+                as: "discussionPostComments",
+                include: [
+                  {
+                    model: masterUser,
+                    as: "commenter",
+                    attributes: ["id", "typeOfUser"],
+                    include: [
+                      {
+                        model: masterUserPersonal,
+                        as: "personalDetails",
+                        attributes: ["id", "firstName", "lastName"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      })
       .then(discussions => {
         resolve({
           message: "Discussions retrieved",
@@ -217,75 +297,10 @@ const getAllDiscussions = classroomId => {
   });
 };
 
-const getDiscussion = discussionId => {
-  return new Promise((resolve, reject) => {
-    Discussion.findOne({
-      where: {
-        id: discussionId
-      },
-      order: [[DiscussionPost, "createdAt", "DESC"],[DiscussionPost, DiscussionPostComment, "createdAt", "DESC"]],
-      include: [
-        {
-          model: MasterUser,
-          attributes: ["id", "typeOfUser"],
-          include: [
-            {
-              model: MasterUserPersonal,
-              attributes: ["id", "firstName", "lastName"]
-            }
-          ]
-        },
-        {
-          model: DiscussionPost,
-          include: [
-            {
-              model: MasterUser,
-              attributes: ["id", "typeOfUser"],
-              include: [
-                {
-                  model: MasterUserPersonal,
-                  attributes: ["id", "firstName", "lastName"]
-                }
-              ]
-            },
-            {
-              model: DiscussionPostComment,
-              include: [
-                {
-                  model: MasterUser,
-                  attributes: ["id", "typeOfUser"],
-                  include: [
-                    {
-                      model: MasterUserPersonal,
-                      attributes: ["id", "firstName", "lastName"]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    })
-      .then(discussion => {
-        resolve({
-          message: "Discussion fetched",
-          data: discussion
-        });
-      })
-      .catch(error => {
-        reject({
-          message: "Something went wrong - " + error.toString()
-        });
-      });
-  });
-};
-
 module.exports = {
   createDiscussion,
   createDiscussionPost,
   createDiscussionPostComment,
 
-  getAllDiscussions,
-  getDiscussion
+  getAllDiscussions
 };

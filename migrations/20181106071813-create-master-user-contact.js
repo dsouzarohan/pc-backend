@@ -1,11 +1,12 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("MasterUserContacts", {
+    return queryInterface.createTable("masterUserContacts", {
       id: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       phoneNumber: {
         type: Sequelize.STRING,
@@ -33,18 +34,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      masterUserID: {
-        type: Sequelize.UUID,
+      masterUserId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
         references: {
-          model: "MasterUsers",
+          model: "masterusers",
           key: "id"
         }
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("MasterUserContacts");
+    return queryInterface.dropTable("masterUserContacts");
   }
 };

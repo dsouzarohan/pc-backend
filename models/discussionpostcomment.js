@@ -1,27 +1,30 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const DiscussionPostComment = sequelize.define('DiscussionPostComment', {
+  const discussionPostComment = sequelize.define('discussionPostComment', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      autoIncrement: true,
+      allowNull: false
     },
     body: {
       type: DataTypes.TEXT,
       allowNull: false
     }
   }, {});
-  DiscussionPostComment.associate = function(models) {
+  discussionPostComment.associate = function(models) {
     // associations can be defined here
 
-    DiscussionPostComment.belongsTo(models.DiscussionPost, {
-      foreignKey: "discussionPostId"
+    discussionPostComment.belongsTo(models.discussionPost, {
+      foreignKey: "discussionPostId",
+      as: "discussionPost"
     });
 
-    DiscussionPostComment.belongsTo(models.MasterUser, {
-      foreignKey: "commentedBy"
+    discussionPostComment.belongsTo(models.masterUser, {
+      foreignKey: "commentedBy",
+      as: "commenter"
     });
 
   };
-  return DiscussionPostComment;
+  return discussionPostComment;
 };

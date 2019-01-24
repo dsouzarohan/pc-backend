@@ -1,12 +1,13 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const MasterUserContact = sequelize.define(
-    "MasterUserContact",
+  const masterUserContact = sequelize.define(
+    "masterUserContact",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true,
+        allowNull: false
       },
       phoneNumber: {
           type: DataTypes.STRING,
@@ -29,19 +30,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  MasterUserContact.associate = function(models) {
+  masterUserContact.associate = function(models) {
     // associations can be defined here
 
     //master associations
-    MasterUserContact.belongsTo(models.MasterUser, {
-      foreignKey: "masterUserId"
+    masterUserContact.belongsTo(models.masterUser, {
+      foreignKey: "masterUserId",
+      as: "masterUserDetails"
     });
 
     //Email association
-    MasterUserContact.hasOne(models.UserCredential, {
+    masterUserContact.hasOne(models.userCredential, {
       sourceKey: 'email',
-      foreignKey: 'email'
+      foreignKey: 'email',
+      as: "userCredential"
     });
   };
-  return MasterUserContact;
+  return masterUserContact;
 };
