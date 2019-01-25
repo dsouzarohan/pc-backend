@@ -49,10 +49,37 @@ const createNewClassroom = classroomDetails => {
       .then(createdClassroom => {
         console.log("Created classroom", createdClassroom.get({ plain: true }));
 
-        resolve({
-          message: "Classroom created successfully",
-          createdClassroom
+        return classroom.findOne({
+          where: {
+            id: createdClassroom.id
+          },
+          include: [
+            {
+              model: teacher,
+              as: "teacher",
+              include: [
+                {
+                  model: masterUser,
+                  as: "masterUserDetails",
+                  attributes: ["id", "typeOfUser"],
+                  include: [
+                    {
+                      model: masterUserPersonal,
+                      as: "personalDetails",
+                      attributes: ["id", "firstName", "lastName"]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         });
+      })
+      .then(fetchedClassroom => {
+      resolve({
+        message: "Classroom created successfully",
+        createdClassroom: fetchedClassroom
+      });
       })
       .catch(error => {
         console.log("Controller catch", error);
@@ -98,11 +125,39 @@ const joinClassroom = (classCode, masterId) => {
         }
       })
       .then(result => {
-        resolve({
-          message: "Student added to classroom",
-          classroom: fetchedClassroom
+
+        return classroom.findOne({
+          where: {
+            id: fetchedClassroom.id
+          },
+          include: [
+            {
+              model: teacher,
+              as: "teacher",
+              include: [
+                {
+                  model: masterUser,
+                  as: "masterUserDetails",
+                  attributes: ["id", "typeOfUser"],
+                  include: [
+                    {
+                      model: masterUserPersonal,
+                      as: "personalDetails",
+                      attributes: ["id", "firstName", "lastName"]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         });
-      })
+
+      }).then( joinedClassroom => {
+      resolve({
+        message: "Student added to classroom",
+        classroom: joinedClassroom
+      });
+    })
       .catch(error => {
         reject({ message: "Something went wrong - " + error.toString() });
       });
@@ -190,7 +245,8 @@ const getClassrooms = (masterId, typeOfUser) => {
           return teacher.findOne({
             where: {
               id: fetchedTeacher.id
-            },include: [
+            },
+            include: [
               {
                 model: classroom,
                 as: "classrooms",

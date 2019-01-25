@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       as: "creator"
     });
 
+    announcement.belongsTo(models.classroom, {
+      foreignKey: "classroomId",
+      as: "classroom"
+    });
+
   };
   return announcement;
 };
