@@ -174,6 +174,7 @@ const getClassrooms = (masterId, typeOfUser) => {
           }
         })
         .then(fetchedStudent => {
+
           return student.findOne({
             where: {
               id: fetchedStudent.id

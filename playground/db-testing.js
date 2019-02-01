@@ -1,30 +1,21 @@
 const db = require("../models");
 
-const { masterUser, student, masterUserPersonal, announcement, teacher, sequelize, classroom } = db;
+const {
+  masterUser,
+  student,
+  masterUserPersonal,
+  announcement,
+  teacher,
+  sequelize,
+  Sequelize,
+  classroom,
+    discussion
+} = db;
 
-classroom.findOne({
-  where: {
-    id: 3
-  },
-  include: [
-    {
-      association: "students",
-      include: [
-        {
-          model: masterUser,
-          as: "masterUserDetails",
-          attributes: ["id","typeOfUser"],
-          include: [
-              {
-                model: masterUserPersonal,
-                as: "personalDetails",
-                attributes: ["id","firstName","lastName"]
-              }
-          ]
-        }
-      ]
-    }
-  ]
-}).then( fetchedClassroom => {
-  console.log(fetchedClassroom.get({plain: true}));
+discussion.findAll().then( discussions => {
+
+  for(let i = 0; i < discussions.length; i++){
+    console.log(discussions[i].get({plain: true}))
+  }
+
 });

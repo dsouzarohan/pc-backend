@@ -106,6 +106,9 @@ const getAnnouncements = classroomId => {
         where: {
           classroomId: classroomId
         },
+      order: [
+          ['createdAt', 'DESC']
+      ],
         include: [
           {
             model: teacher,

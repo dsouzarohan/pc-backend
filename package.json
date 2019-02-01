@@ -19,6 +19,7 @@
     "mysql2": "^1.6.3",
     "pug": "2.0.0-beta11",
     "sequelize": "^4.41.0",
-    "sequelize-cli": "^5.4.0"
+    "sequelize-cli": "^5.4.0",
+    "sequelize-virtual-fields": "^1.1.0"
   }
 }

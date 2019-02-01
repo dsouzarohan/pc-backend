@@ -12,11 +12,13 @@ const usersRouter = require("./routes/users");
 const classroomsRouter = require("./routes/classrooms");
 const discussionsRouter = require("./routes/discussions");
 const announcementsRouter = require("./routes/announcements");
+const questionsRouter = require("./routes/questions");
 
 //express app
 const app = express();
 
 const { Sequelize, sequelize } = require("./models");
+
 
 //custom middleware
 
@@ -33,5 +35,6 @@ app.use("/api/users", usersRouter);
 app.use("/api/classrooms", classroomsRouter);
 app.use("/api/discussions", discussionsRouter);
 app.use("/api/announcements", announcementsRouter);
+app.use("/api/questions", questionsRouter);
 
 module.exports = app;

@@ -64,6 +64,49 @@ module.exports = (sequelize, DataTypes) => {
       as: "discussionPostComments"
     });
 
+    //QnA associations
+
+    masterUser.hasMany(models.question, {
+      foreignKey: "authorId",
+      as: "questions"
+    });
+
+    masterUser.hasMany(models.questionComment, {
+      foreignKey: "commenterId",
+      as: "questionComments"
+    });
+
+    masterUser.hasMany(models.questionVote, {
+      foreignKey: "voterId",
+      as: "questionVotes"
+    });
+
+    masterUser.hasMany(models.questionCommentVote, {
+      foreignKey: "voterId",
+      as: "questionCommentVotes"
+    });
+
+    masterUser.hasMany(models.questionAnswer, {
+      foreignKey: "answererId",
+      as: "answers"
+    });
+
+    masterUser.hasMany(models.answerComment, {
+      foreignKey: "commenterId",
+      as: "answerComments"
+    });
+
+    masterUser.hasMany(models.answerVote, {
+      foreignKey: "voterId",
+      as: "answerVotes"
+    });
+
+    masterUser.hasMany(models.answerCommentVote, {
+      foreignKey: "voterId",
+      as: "answerCommentVotes"
+    });
+
+
   };
 
   return masterUser;

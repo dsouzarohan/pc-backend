@@ -2,7 +2,7 @@ const userIDAuth = require("../middleware/userIDAuth");
 const router = require("express").Router();
 const announcementControllers = require("../controllers/announcements");
 
-router.post("/", userIDAuth({ authorizationOnlyTo: "Teacher" }), (req, res) => {
+router.post("/new", userIDAuth({ authorizationOnlyTo: "Teacher" }), (req, res) => {
   let { announcementBody, classroomId } = req.body;
   let masterUserId = req.userData.userID;
 
@@ -16,7 +16,7 @@ router.post("/", userIDAuth({ authorizationOnlyTo: "Teacher" }), (req, res) => {
     });
 });
 
-router.get("/new", userIDAuth(), (req, res) => {
+router.get("/", userIDAuth(), (req, res) => {
   let classroomId = req.query.classroomId;
 
   announcementControllers

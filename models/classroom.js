@@ -51,6 +51,13 @@ module.exports = (sequelize, DataTypes) => {
       as: "announcements"
     });
 
+    //QnA associations
+
+    classroom.hasMany(models.question, {
+      foreignKey: "classroomId",
+      as: "questions"
+    });
+
   };
   return classroom;
 };
