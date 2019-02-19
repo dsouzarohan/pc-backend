@@ -58,6 +58,13 @@ module.exports = (sequelize, DataTypes) => {
       as: "questions"
     });
 
+    //event associations
+
+    classroom.hasMany(models.event, {
+      foreignKey: "classroomId",
+      as: "events"
+    })
+
   };
   return classroom;
 };

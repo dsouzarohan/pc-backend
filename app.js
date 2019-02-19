@@ -13,6 +13,7 @@ const classroomsRouter = require("./routes/classrooms");
 const discussionsRouter = require("./routes/discussions");
 const announcementsRouter = require("./routes/announcements");
 const questionsRouter = require("./routes/questions");
+const eventsRouter = require("./routes/events");
 
 //express app
 const app = express();
@@ -36,5 +37,6 @@ app.use("/api/classrooms", classroomsRouter);
 app.use("/api/discussions", discussionsRouter);
 app.use("/api/announcements", announcementsRouter);
 app.use("/api/questions", questionsRouter);
+app.use("/api/events", eventsRouter);
 
 module.exports = app;

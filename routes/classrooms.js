@@ -85,19 +85,4 @@ router.get("", userAuth(), (req, res) => {
     });
 });
 
-// router.get("/:id", userAuth(), (req, res) => {
-//   let classroomID = req.params["id"];
-//
-//   console.log("@ClassroomRoutes:GetDetails#classroomID", classroomID);
-//
-//   classroomController
-//     .getClassroomDetails(classroomID)
-//     .then(classroomDetails => {
-//       res.json(classroomDetails);
-//     })
-//     .catch(error => {
-//       res.status(422).send(error);
-//     });
-// });
-
 module.exports = router;

@@ -38,6 +38,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "createdBy",
       as: "announcements"
     });
+
+    //event associations
+
+    teacher.hasMany(models.event, {
+      foreignKey: "teacherId",
+      as: "events"
+    });
   };
   return teacher;
 };
