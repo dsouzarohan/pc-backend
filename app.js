@@ -14,6 +14,7 @@ const discussionsRouter = require("./routes/discussions");
 const announcementsRouter = require("./routes/announcements");
 const questionsRouter = require("./routes/questions");
 const eventsRouter = require("./routes/events");
+const notesRouter =require("./routes/notes");
 
 //express app
 const app = express();
@@ -38,5 +39,6 @@ app.use("/api/discussions", discussionsRouter);
 app.use("/api/announcements", announcementsRouter);
 app.use("/api/questions", questionsRouter);
 app.use("/api/events", eventsRouter);
+app.use("/api/notes", notesRouter);
 
 module.exports = app;

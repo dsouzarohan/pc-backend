@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       as: "personalDetails"
     });
 
-
     masterUser.hasOne(models.masterUserContact, {
       foreignKey: "masterUserId",
       as: "contactDetails"
@@ -106,7 +105,12 @@ module.exports = (sequelize, DataTypes) => {
       as: "answerCommentVotes"
     });
 
+    //notes associations
 
+    masterUser.hasMany(models.upload, {
+      foreignKey: "uploaderId",
+      as: "uploads"
+    });
   };
 
   return masterUser;
