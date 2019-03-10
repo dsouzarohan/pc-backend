@@ -1,0 +1,4 @@
+container_commands:
+  name of container_command:
+    command: "npm migrate"
+    leader_only: true

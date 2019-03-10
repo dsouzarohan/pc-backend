@@ -39,7 +39,7 @@ module.exports = {
         allowNull: false,
         unique: true,
         references: {
-          model: "masterusers",
+          model: "masterUsers",
           key: "id"
         }
       }

@@ -38,5 +38,9 @@ app.use("/api/announcements", announcementsRouter);
 app.use("/api/questions", questionsRouter);
 app.use("/api/events", eventsRouter);
 app.use("/api/notes", notesRouter);
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 
 module.exports = app;
