@@ -8,19 +8,9 @@ const {
   masterUserPersonal
 } = require("../models");
 
-const fs = require("fs");
-const join = require("path").join;
-const s3Zip = require("s3-zip");
-const S3 = require("../config/aws-s3-config");
 const archiver = require("archiver");
+const mime = require("mime-types");
 const s3Fetcher = require("../utilities/s3-fetcher");
-
-const {
-  BUCKET_NAME,
-  CLASSROOM_FOLDER_PREFIX,
-  UPLOAD_FOLDER_PREFIX,
-  BUCKET_REGION
-} = require("../config/multer-config");
 
 const getUploads = classroomId => {
   return new Promise((resolve, reject) => {
@@ -224,11 +214,6 @@ const download = (req, res) => {
           "Content-disposition": "attachment; filename=" + zipName
         });
         let fetchedUploadFiles = fetchedUpload.files;
-        // let zipLocation = join(
-        //   __dirname,
-        //   fetchedUpload.title.split(" ").join("-") + ".zip"
-        // );
-        // let outputStream = fs.createWriteStream(zipLocation);
         let archive = archiver("zip", {
           zlib: { level: 9 }
         });
@@ -258,9 +243,60 @@ const download = (req, res) => {
     });
 };
 
+const downloadFile = (req, res) => {
+  let fileId = req.query["fileId"];
+
+  let downloadedFile;
+
+  file
+    .findOne({
+      where: {
+        id: fileId
+      }
+    })
+    .then(fetchedFile => {
+      if (fetchedFile) {
+        downloadedFile = fetchedFile;
+        return s3Fetcher.getS3Object(fetchedFile.key);
+      } else {
+        console.log("File to be downloaded does not exist");
+
+        res.status(422).send({
+          message: "File to be downloaded does not exist"
+        });
+
+        return null;
+      }
+    })
+    .then(fileObject => {
+      if (fileObject) {
+        res.set({
+          "Content-Type": mime.contentType(downloadedFile.originalName),
+          "Content-disposition":
+            "attachment; filename=" + downloadedFile.originalName
+        });
+
+        console.log("Testing");
+
+        res.end(fileObject.Body);
+
+      } else {
+        throw new Error("File could not be downloaded");
+      }
+    })
+    .catch(error => {
+      console.log("Some error", error);
+
+      res.status(422).send({
+        message: "Something went wrong - " + error.toString()
+      });
+    });
+};
+
 module.exports = {
   addFilesToUpload,
   createUpload,
   getUploads,
-  download
+  download,
+  downloadFile
 };

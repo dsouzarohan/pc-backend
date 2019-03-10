@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const secrets = require("../config/secrets");
 
 createToken = (email, id, type) => {
   const token = jwt.sign(
@@ -7,7 +8,7 @@ createToken = (email, id, type) => {
         userID: id,
         type: type
       },
-      "MYSECRETTHATWILLBECHANGEDSOON",
+      secrets.bcryptSecret,
       {
         expiresIn: "1hr"
       }

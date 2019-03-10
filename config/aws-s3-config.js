@@ -1,7 +1,8 @@
 const aws = require("aws-sdk");
+const secrets = require("./secrets");
 
-const SECRET_ACCESS_KEY = "somesecretkey";
-const ACCESS_KEY_ID = "anothersecret";
+const SECRET_ACCESS_KEY = secrets.awsSecretKey;
+const ACCESS_KEY_ID = secrets.awsAccessKeyId;
 const BUCKET_NAME = "pc-notes";
 const REGION = "us-east-1";
 

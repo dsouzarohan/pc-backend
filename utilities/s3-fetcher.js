@@ -37,6 +37,26 @@ const getS3ObjectsAsBufferArray = files => {
   });
 };
 
+const getS3Object = key => {
+  return new Promise((resolve, reject) => {
+    let params = {
+      Bucket: BUCKET_NAME,
+      Key: key
+    };
+
+    S3.getObject(params, (err, data) => {
+      if (err) {
+        reject({
+          message: "Could not find files: " + err.toString()
+        });
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
 module.exports = {
-  getS3ObjectsAsBufferArray
+  getS3ObjectsAsBufferArray,
+  getS3Object
 };

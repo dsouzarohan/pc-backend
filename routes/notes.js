@@ -2,13 +2,9 @@ const router = require("express").Router();
 const userAuth = require("../middleware/userIDAuth");
 const {
   multer,
-  storage,
-  multerStorage,
-  UPLOAD_FOLDER_PREFIX,
-  CLASSROOM_FOLDER_PREFIX
+  multerStorage
 } = require("../config/multer-config");
 const uuidv4 = require("uuid/v4");
-const zipper = require("../config/zipper-config");
 
 const notesController = require("../controllers/notes");
 
@@ -30,6 +26,7 @@ router.post("/upload", userAuth(), (req, res) => {
         .json({ message: "Something went wrong - " + err.toString() });
     } else {
       let { classroomId, title, body } = req.body;
+      classroomId = +classroomId;
 
       let uploadId = req.uploadInfo.uploadId;
       let uploaderId = req.userData.userID;
@@ -67,22 +64,11 @@ router.get("/", userAuth(), (req, res) => {
 });
 
 router.get("/download", userAuth(), (req, res) => {
-  let uploadId = req.query.uploadId;
+  notesController.download(req, res);
+});
 
-  console.log("Route reached", uploadId);
-  console.log("ziipper", zipper.awsConfig);
-
-  notesController
-    .download(req, res);
-    // .then(result => {
-    //
-    //   console.log(result);
-    //
-    //   // res.download(result.zipLocation);
-    // })
-    // .catch(error => {
-    //   console.log("error" + error);
-    // });
+router.get("/download/file", userAuth(), (req, res) => {
+  notesController.downloadFile(req, res);
 });
 
 module.exports = router;

@@ -4,7 +4,6 @@ const path = require("path");
 const allowCORS = require("./middleware/allowCORS");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const userIDAuth = require("./middleware/userIDAuth");
 
 // routers
 const indexRouter = require("./routes/index");
@@ -18,7 +17,6 @@ const notesRouter =require("./routes/notes");
 
 //express app
 const app = express();
-
 const { Sequelize, sequelize } = require("./models");
 
 

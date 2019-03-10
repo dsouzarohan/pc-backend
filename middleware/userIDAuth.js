@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const secrets = require("../config/secrets");
 
 module.exports = ( options ) => {
 
@@ -22,7 +23,7 @@ module.exports = ( options ) => {
     try{
 
       const token = tokenHeader.split(' ')[1];
-      const decodedToken = jwt.verify(token, "MYSECRETTHATWILLBECHANGEDSOON");
+      const decodedToken = jwt.verify(token, secrets.bcryptSecret);
 
       console.log("@UserIDMiddleware#Decoded token", decodedToken);
 
